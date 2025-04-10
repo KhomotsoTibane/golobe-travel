@@ -10,7 +10,7 @@ interface NavProps {
 const Navbar = ({ textWhite }: NavProps) => {
   return (
     <nav
-      className={` absolute inset-0  max-w-screen-2xl  ${textWhite ? "bg-transparent text-white" : "bg-white"} flex-between z-50 h-20 w-full gap-5 px-8  py-6`}
+      className={` absolute inset-0  max-w-screen-2xl  ${textWhite ? "bg-transparent text-white" : "bg-white"} flex-between z-50 h-20 w-full gap-5 px-8  py-6 mx-auto`}
     >
       <div className="grid grid-cols-3 lg:gap-72">
         <div className="col-span-1 flex  items-center justify-center lg:gap-8">

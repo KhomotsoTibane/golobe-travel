@@ -26,7 +26,6 @@ function LandingPage() {
           backgroundImage: `url(${HeroLanding})`,
         }}
       >
-        <Navbar textWhite />
         <div className="relative z-10 flex flex-col justify-center md:rounded-2xl">
           <div className="dark-gradient absolute inset-0 md:rounded-2xl " />
           <div className="flex flex-col items-center justify-center px-4 text-center h-screen md:h-[80vh]">
