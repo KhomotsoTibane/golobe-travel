@@ -1,0 +1,73 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { HotelsCTA } from "@/constants";
+import { StaysHero } from "@/assets/images";
+import BookingLinkCard from "@/components/Cards/BookingLinkCard";
+import { motion } from "framer-motion";
+import SearchTab from "@/components/Search/SearchTab";
+
+export const Route = createFileRoute("/_appLayout/(hotelFlow)/hotels/")({
+  component: HotelLandingPage,
+});
+
+function HotelLandingPage() {
+  return (
+    <div className="size-full">
+      <div
+        className="relative mx-auto flex max-w-screen-2xl flex-col md:rounded-2xl bg-cover bg-no-repeat h-screen md:h-[80vh]"
+        style={{
+          backgroundImage: `url(${StaysHero})`,
+        }}
+      >
+        <div className="relative z-10 flex flex-col justify-center md:rounded-2xl">
+          <div className="dark-gradient absolute inset-0 md:rounded-2xl " />
+          <div className="flex flex-col items-center justify-center px-4 text-center h-screen md:h-[80vh]">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.5 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="justify-center items-center lg:justify-start lg:items-start lg:text-left z-20 mt-20 flex flex-col gap-8 max-w-screen-xl"
+            >
+              <h2 className="trade__normal text-white text-lg sm:text-xl md:text-2xl">
+                Make your travel wishlist, we'll do the rest
+              </h2>
+
+              <h6 className="text-white text-sm sm:text-base">Special offers tailored to you</h6>
+            </motion.div>
+            <div className="absolute left-1/2 bottom-0 z-20 w-full max-w-screen-xl -translate-x-1/2 translate-y-10 px-4 hidden md:block md:px-20">
+              <SearchTab type="both" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* <HotelCTA /> */}
+      <div className="mt-20 flex w-full flex-col max-w-screen-2xl mx-auto">
+        <div className="flex gap-6">
+          <div className="flex w-full px-20 lg:px-0 flex-col gap-4 text-wrap">
+            <h4 className="montserrat__bold">Plan your perfect trip</h4>
+            <p className="montserrat__normal text-black text-left text-wrap">
+              Going somewhere to celebrate this season? Whether you’re going home or somewhere to
+              roam, we’ve got the travel tools to get you to your destination.
+            </p>
+          </div>
+        </div>
+        <div className="mt-8 grid w-full grid-cols-1 justify-items-center gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {HotelsCTA.map((card) => (
+            <BookingLinkCard
+              key={card.title}
+              title={card.title}
+              details={card.details}
+              link={card.link}
+              size={card.size}
+              buttonText={card.buttonText}
+              icon={card.icon}
+              imageUrl={card.imageUrl}
+              price={card.price}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

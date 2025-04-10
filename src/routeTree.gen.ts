@@ -11,15 +11,29 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AppLayoutImport } from './routes/_appLayout'
 import { Route as IndexImport } from './routes/index'
+import { Route as AppLayouthotelFlowHotelsIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/index'
 
 // Create/Update Routes
+
+const AppLayoutRoute = AppLayoutImport.update({
+  id: '/_appLayout',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const AppLayouthotelFlowHotelsIndexRoute =
+  AppLayouthotelFlowHotelsIndexImport.update({
+    id: '/(hotelFlow)/hotels/',
+    path: '/hotels/',
+    getParentRoute: () => AppLayoutRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -32,39 +46,73 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/_appLayout': {
+      id: '/_appLayout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppLayoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/_appLayout/(hotelFlow)/hotels/': {
+      id: '/_appLayout/(hotelFlow)/hotels/'
+      path: '/hotels'
+      fullPath: '/hotels'
+      preLoaderRoute: typeof AppLayouthotelFlowHotelsIndexImport
+      parentRoute: typeof AppLayoutImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface AppLayoutRouteChildren {
+  AppLayouthotelFlowHotelsIndexRoute: typeof AppLayouthotelFlowHotelsIndexRoute
+}
+
+const AppLayoutRouteChildren: AppLayoutRouteChildren = {
+  AppLayouthotelFlowHotelsIndexRoute: AppLayouthotelFlowHotelsIndexRoute,
+}
+
+const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
+  AppLayoutRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '': typeof AppLayoutRouteWithChildren
+  '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '': typeof AppLayoutRouteWithChildren
+  '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/_appLayout': typeof AppLayoutRouteWithChildren
+  '/_appLayout/(hotelFlow)/hotels/': typeof AppLayouthotelFlowHotelsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '' | '/hotels'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '' | '/hotels'
+  id: '__root__' | '/' | '/_appLayout' | '/_appLayout/(hotelFlow)/hotels/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppLayoutRoute: typeof AppLayoutRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppLayoutRoute: AppLayoutRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +125,22 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/_appLayout"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/_appLayout": {
+      "filePath": "_appLayout.tsx",
+      "children": [
+        "/_appLayout/(hotelFlow)/hotels/"
+      ]
+    },
+    "/_appLayout/(hotelFlow)/hotels/": {
+      "filePath": "_appLayout/(hotelFlow)/hotels/index.tsx",
+      "parent": "/_appLayout"
     }
   }
 }
