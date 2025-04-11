@@ -1,12 +1,14 @@
 import FiltersFull from "@/components/Filters/FiltersFull";
+import Map from "@/components/Map/Map";
 import HotelSearch from "@/components/Search/HotelSearch";
 import SearchHotelResults from "@/components/Search/SearchHotelResults";
 import { Button } from "@/components/ui/button";
 import { client } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Filter } from "lucide-react";
+import { useState } from "react";
 import { z } from "zod";
 
 const hotelSearchSchema = z.object({
@@ -43,6 +45,7 @@ export const Route = createFileRoute("/_appLayout/(hotelFlow)/hotels/search-resu
 });
 
 function HotelSearchResults() {
+  const [isFiltersFullOpen, setIsFiltersFullOpen] = useState(false);
   const initialData = Route.useLoaderData();
   const search = Route.useSearch();
   const { city } = Route.useParams();
@@ -55,6 +58,11 @@ function HotelSearchResults() {
   const adults = search.adults ?? "";
   const children = search.children ?? "";
   const rooms = search.rooms ?? "";
+
+  const { data: entityData } = useQuery({
+    queryKey: ["location-entity"],
+    queryFn: async () => client.getHotelEntityByName({ city }),
+  });
 
   const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } =
     useInfiniteQuery({
@@ -77,7 +85,7 @@ function HotelSearchResults() {
 
   const hotels = data?.pages.flatMap((pages) => pages.data) ?? [];
   const totalCount = data?.pages[0].totalCount ?? 0;
-  const isFiltersFullOpen = true;
+
   return (
     <div
       className="w-full mx-auto px-5 flex flex-col mt-24"
@@ -92,9 +100,9 @@ function HotelSearchResults() {
             "gap-2 rounded-md border-primary-400 hover:bg-primary-500 hover:text-primary-100",
             isFiltersFullOpen && "bg-primary-700 text-primary-100"
           )}
-          // onClick={() => {
-          //   setIsFiltersFullOpen(!isFiltersFullOpen);
-          // }}
+          onClick={() => {
+            setIsFiltersFullOpen(!isFiltersFullOpen);
+          }}
         >
           <Filter className="w-4 h-4" />
           <span>All Filters</span>
@@ -109,13 +117,13 @@ function HotelSearchResults() {
         >
           <FiltersFull />
         </div>
-        {/* <Map
-        properties={hotels}
-        error={error}
-        status={status}
-        isFetching={isFetching}
-        entity={entityData}
-      /> */}
+        <Map
+          properties={hotels}
+          error={error}
+          status={status}
+          isFetching={isFetching}
+          entity={entityData}
+        />
         <div className="basis-8/12 overflow-y-auto no-scrollbar" style={{ overflowY: "scroll" }}>
           <SearchHotelResults
             searchResults={hotels}
