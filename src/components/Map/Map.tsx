@@ -48,7 +48,7 @@ const Map = ({ properties, error, isFetching, isFetchingNextPage, status, entity
 
   return (
     // <div className="basis-5/12 grow relative rounded-xl border h-full">
-    <div className=" relative rounded-xl w-full h-screen">
+    <div className="relative rounded-xl w-full h-screen">
       <div
         className="map-container rounded-xl"
         ref={mapContainerRef}

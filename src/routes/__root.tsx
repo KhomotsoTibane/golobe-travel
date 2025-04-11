@@ -46,15 +46,15 @@ function Home() {
     Route.useSearch();
 
   const setFilters = useFilterStore((state) => state.setFilters);
-  const match = useMatch({ from: `/_appLayout/(hotelFlow)/hotels/search-results/$city/` });
-  console.log("matc city", match.params.city);
+  // const match = useMatch({ from: `/_appLayout/(hotelFlow)/hotels/search-results/$city/` });
+  // console.log("matc city", match.params.city);
 
   useEffect(() => {
     const parsedFilters = {
       rating: rating ? parseInt(rating) : undefined,
       price: price ? (price.split("-").map(Number) as [number, number]) : undefined,
       amenities: amenities,
-      location: match.params.city,
+      // location: match.params.city,
       adults: adults ? parseInt(adults) : undefined,
       children: children ? parseInt(children) : undefined,
       rooms: rooms ? parseInt(rooms) : undefined,
@@ -73,8 +73,8 @@ function Home() {
     adults,
     checkin,
     checkout,
-    children,
-    location
+    children
+    // location
   );
 
   return (

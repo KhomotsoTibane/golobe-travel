@@ -88,12 +88,12 @@ function HotelSearchResults() {
 
   return (
     <div
-      className="w-full mx-auto px-5 flex flex-col mt-24"
+      className="md:w-full max-w-screen md:mx-auto md:px-5 flex flex-col mt-24 "
       style={{
         height: `calc(100vh - ${52}px)`,
       }}
     >
-      <div className="flex justify-between items-center w-full py-5 ">
+      <div className="hidden md:flex justify-between items-center w-full py-5 ">
         <Button
           variant="outline"
           className={cn(
@@ -117,14 +117,20 @@ function HotelSearchResults() {
         >
           <FiltersFull />
         </div>
-        <Map
-          properties={hotels}
-          error={error}
-          status={status}
-          isFetching={isFetching}
-          entity={entityData}
-        />
-        <div className="basis-8/12 overflow-y-auto no-scrollbar" style={{ overflowY: "scroll" }}>
+        <div className="hidden md:block">
+          {/* <Map
+            properties={hotels}
+            error={error}
+            status={status}
+            isFetching={isFetching}
+            entity={entityData}
+          /> */}
+        </div>
+        {/* <div
+          className=" md:basis-8/12 overflow-y-auto no-scrollbar"
+          style={{ overflowY: "scroll" }}
+        > */}
+        <div className=" h-screen md:h-full overflow-y-auto bg-accent-400">
           <SearchHotelResults
             searchResults={hotels}
             fetchNextPage={fetchNextPage}
