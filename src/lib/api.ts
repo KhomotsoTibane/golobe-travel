@@ -1,8 +1,10 @@
 import type {
+  detailsSearchParmas,
   LocationEntity,
   pageParams,
   PaginatedHotelResponse,
   searchByEntityParams,
+  SearchHotelDetailResultsProps,
 } from "@/types";
 
 export const client = {
@@ -62,5 +64,15 @@ export const client = {
       totalCount: json.totalCount,
       nextCursor: pageNumber < totalPages ? pageNumber + 1 : undefined,
     };
+  },
+  async getHotelDetails(params: detailsSearchParmas): Promise<SearchHotelDetailResultsProps> {
+    const { hotelName } = params;
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/get-hotel-details/${hotelName}`);
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+    const json = await res.json();
+    console.log("api response 2", json);
+    return json;
   },
 };

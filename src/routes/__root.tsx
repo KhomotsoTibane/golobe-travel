@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar/Navbar";
 import type { QueryClient } from "@tanstack/react-query";
-import { Outlet, createRootRouteWithContext, useMatch } from "@tanstack/react-router";
+import { Outlet, createRootRouteWithContext, useMatch, useMatches } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useFilterStore } from "@/store/useFilterStore";
 import { useEffect } from "react";
@@ -46,15 +46,21 @@ function Home() {
     Route.useSearch();
 
   const setFilters = useFilterStore((state) => state.setFilters);
-  const match = useMatch({ from: `/_appLayout/(hotelFlow)/hotels/search-results/$city/` });
-  console.log("matc city", match.params.city);
+  // const match = useMatch({ from: `/_appLayout/(hotelFlow)/hotels/search-results/$city/` });
+  // console.log("matc city", match.params.city);
+  const matches = useMatches();
+  const searchMatch = matches.find((m) => m.routeId?.includes("hotels/search-results"));
+
+  console.log("dkjhfjkds", searchMatch);
+
+  const city = (searchMatch?.params as { city: string })?.city;
 
   useEffect(() => {
     const parsedFilters = {
       rating: rating ? parseInt(rating) : undefined,
       price: price ? (price.split("-").map(Number) as [number, number]) : undefined,
       amenities: amenities,
-      location: match.params.city,
+      location: city,
       adults: adults ? parseInt(adults) : undefined,
       children: children ? parseInt(children) : undefined,
       rooms: rooms ? parseInt(rooms) : undefined,

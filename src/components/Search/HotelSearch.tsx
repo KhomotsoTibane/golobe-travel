@@ -64,9 +64,9 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
       guests: "1",
       checkin: checkin,
       checkout: checkout,
-      rooms: rooms.toString(),
-      adults: adults.toString(),
-      children: children.toString(),
+      // rooms: rooms.toString(),
+      // adults: adults.toString(),
+      // children: children.toString(),
     },
   });
 
