@@ -121,12 +121,12 @@ const SearchHotelResultsCard = ({
           </Button>
 
           <Button asChild variant="default" className="montserrat__semibold text-black grow">
-            {/* <Link
+            <Link
               to={`/hotels/search-results/$city/$hotelName`}
               params={{ city: city, hotelName: hotelName }}
             >
               View place
-            </Link> */}
+            </Link>
           </Button>
         </div>
       </div>

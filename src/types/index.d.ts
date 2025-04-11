@@ -23,6 +23,10 @@ export type pageParams = {
   rooms?: string;
 };
 
+export type detailsSearchParmas = {
+  hotelName: string;
+};
+
 export type searchByEntityParams = {
   city: string;
 };
