@@ -5,6 +5,7 @@ import type {
   PaginatedHotelResponse,
   searchByEntityParams,
   SearchHotelDetailResultsProps,
+  userFavoriteParams,
 } from "@/types";
 import { queryOptions } from "@tanstack/react-query";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
@@ -115,6 +116,15 @@ export const client = {
     }
     const json = await res.json();
     console.log("api response 2", json);
+    return json;
+  },
+  async getUserFavorites(params: userFavoriteParams) {
+    const { id } = params;
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user-favorites/${id}`);
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+    const json = await res.json();
     return json;
   },
 };
