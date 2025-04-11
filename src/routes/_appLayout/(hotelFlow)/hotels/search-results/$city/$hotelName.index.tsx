@@ -200,11 +200,11 @@ function HotelDetails() {
             <Button variant="outline" className="border-primary-400">
               <img src={heart} width={16} height={16} alt="heart-icon" />
             </Button>
-            {/* <Link to={`/booking`}>
+            <Link to={`/booking`}>
               <Button variant="default" className="montserrat__semibold w-full text-black">
                 Book Now
               </Button>
-            </Link> */}
+            </Link>
           </div>
         </div>
 

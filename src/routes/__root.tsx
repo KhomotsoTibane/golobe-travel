@@ -85,7 +85,7 @@ function Home() {
 
   return (
     <div className="grid h-full grid-rows-[auto,_1fr]">
-      <Navbar textWhite />
+      <Navbar />
       <div className="h-full px-4">
         <Outlet />
       </div>

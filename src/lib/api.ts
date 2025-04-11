@@ -6,6 +6,48 @@ import type {
   searchByEntityParams,
   SearchHotelDetailResultsProps,
 } from "@/types";
+import { queryOptions } from "@tanstack/react-query";
+import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
+
+export const userQueryOptions = queryOptions({
+  queryKey: ["get-current-user"],
+  queryFn: fetchCurrentUser,
+});
+
+async function fetchCurrentUser() {
+  try {
+    const user = await getCurrentUser();
+    const session = await fetchAuthSession();
+    const email = session.tokens?.idToken?.payload.email;
+    // const { idToken } = session.tokens ?? {};
+
+    let res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/${user.userId}`);
+    let userDetails = res.ok ? await res.json() : null;
+
+    if (!userDetails && res.status === 404) {
+      const createRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cognitoId: user.userId,
+          name: user.username,
+          email,
+        }),
+      });
+      userDetails = await createRes.json();
+    }
+
+    return {
+      cognitoInfo: user,
+      userDetails,
+    };
+  } catch (error) {
+    console.error("Error in fetchCurrentUser", error);
+    return null;
+  }
+}
 
 export const client = {
   async getHotelEntities() {
