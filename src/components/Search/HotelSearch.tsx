@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -12,6 +10,13 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -19,6 +24,8 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
 import { bedDark, buildingDark, calendarDark, crossDark, personDark } from "@/assets/icons/index";
+import { useFilterStore } from "@/store/useFilterStore";
+import { Navigate } from "@tanstack/react-router";
 
 const formSchema = z.object({
   location: z.string().min(2, {
@@ -31,28 +38,97 @@ const formSchema = z.object({
   checkout: z.date({
     required_error: "Check-out date is required to make a reservation",
   }),
+  rooms: z.string(),
+  adults: z.string(),
+  children: z.string().optional(),
 });
 
 const HotelSearch = ({ icon }: { icon: boolean }) => {
-  const { setValue } = useForm();
-  const [rooms, setRooms] = useState(1);
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
-  const [search, setSearch] = useState("");
+  const {
+    rating,
+    rooms,
+    price,
+    amenities,
+    adults,
+    checkin,
+    checkout,
+    children,
+    location,
+    setFilters,
+  } = useFilterStore();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       location: "",
       guests: "1",
+      checkin: checkin,
+      checkout: checkout,
+      rooms: rooms.toString(),
+      adults: adults.toString(),
+      children: children.toString(),
     },
   });
+
+  console.log(
+    "saying this form hotel search baba",
+    "rating-",
+    rating,
+    "rooms-",
+    rooms,
+    "price-",
+    price,
+    "amenities-",
+    amenities,
+    "adults-",
+    adults,
+    "checkin-",
+    checkin,
+    "checkout-",
+    checkout,
+    "children-",
+    children,
+    "location-",
+    location
+  );
+
+  function onSubmit(value: z.infer<typeof formSchema>) {
+    const checkinDate = new Date(value.checkin);
+    const checkoutDate = new Date(value.checkout);
+    const formattedCheckin = `${checkinDate.getFullYear()}/${(checkinDate.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}/${checkinDate.getDate().toString().padStart(2, "0")}`;
+    const formattedCheckout = `${checkoutDate.getFullYear()}/${(checkoutDate.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}/${checkoutDate.getDate().toString().padStart(2, "0")}`;
+
+    setFilters({
+      location: value.location,
+      children: children ?? value.children,
+      rooms: parseInt(value.rooms),
+      adults: parseInt(value.adults),
+      checkin: checkinDate,
+      checkout: checkoutDate,
+    });
+
+    // Navigate({
+    //   to: "/hotels/search-results/$city",
+    //   params: { city: value.location },
+    //   search: {
+    //     ...routerState.location.search,
+    //     checkin: formattedCheckin,
+    //     checkout: formattedCheckout,
+    //     adults: formAdults.toString(),
+    //     children: formChildren.toString(),
+    //     rooms: formRooms.toString(),
+    //   },
+    // });
+  }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={() => {
-          console.log("tried submit");
-        }}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="flex w-full  flex-col items-center justify-center gap-8  text-black"
       >
         <div className="flex sm:flex-col lg:flex-row w-full max-w-[1184px] gap-4 py-2">
@@ -60,22 +136,28 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
             control={form.control}
             name="location"
             render={({ field }) => (
-              <FormItem className="relative flex w-full max-w-[416px] flex-col">
-                <FormLabel className="absolute left-3 bg-white px-2">Enter Destination</FormLabel>
-                <FormControl>
-                  <div className="flex items-center gap-1 rounded-md border px-2">
-                    <img src={bedDark} width={20} height={20} alt="bed-icon" />
-                    <Input
-                      type="text"
-                      value={search}
-                      onChange={(e) => {
-                        setSearch(e.target.value);
-                      }}
-                      placeholder=""
-                      className="no-focus border-none bg-transparent bg-none text-black shadow-none outline-none"
-                    />
-                  </div>
-                </FormControl>
+              <FormItem className="relative flex w-full max-w-[300px] flex-col ">
+                <FormLabel className="absolute left-3 bottom-8.5 bg-white px-2">
+                  Destination
+                </FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={location}>
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pick destination" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="bg-default bg-white">
+                    <SelectItem value="Mpumalanga">Mpumalanga</SelectItem>
+                    <SelectItem value="Malé">Malé</SelectItem>
+                    <SelectItem value="Cape Town">Cape Town</SelectItem>
+                    <SelectItem value="Paris">Paris</SelectItem>
+                    <SelectItem value="New York">New York</SelectItem>
+                    <SelectItem value="Tokyo">Tokyo</SelectItem>
+                    <SelectItem value="Baku">Baku</SelectItem>
+                    <SelectItem value="Dubai">Dubai</SelectItem>
+                    <SelectItem value="Istanbul">Istanbul</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -106,10 +188,7 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={(date) => {
-                          field.onChange(date);
-                          setValue("date", date);
-                        }}
+                        onSelect={field.onChange}
                         disabled={[{ before: new Date() }]}
                         initialFocus
                       />
@@ -144,11 +223,8 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={(date) => {
-                          field.onChange(date);
-                          setValue("date", date);
-                        }}
-                        // disabled={[{ before: new Date() }]}
+                        onSelect={field.onChange}
+                        disabled={[{ before: new Date() || checkin }]}
                         initialFocus
                       />
                     </PopoverContent>
@@ -163,7 +239,7 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
               control={form.control}
               name="guests"
               render={({ field }) => (
-                <FormItem className="relative flex w-full max-w-[240px] flex-col">
+                <FormItem className="relative flex w-full max-w-[300px] flex-col">
                   <FormLabel className="absolute left-1 bg-white px-2">Rooms & Guests</FormLabel>
                   <FormControl>
                     <Popover>
@@ -190,74 +266,51 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
                       </PopoverTrigger>
                       <PopoverContent className="w-80 bg-white">
                         <div className="grid gap-4">
-                          <div className="space-y-2"></div>
                           <div className="grid gap-2">
-                            <div className="grid grid-cols-3 items-center gap-4">
-                              <Label htmlFor="adults">Adults</Label>
-                              <div className=" col-span-2 col-start-2 flex items-center  justify-between rounded-md border px-8 py-px">
-                                <Button
-                                  size={"sm"}
-                                  onClick={() => {
-                                    adults > 1 && setAdults(adults - 1);
-                                  }}
-                                >
-                                  -
-                                </Button>
-                                <span className=" text-center">{adults}</span>
-                                <Button
-                                  size={"sm"}
-                                  onClick={() => {
-                                    adults < 30 && setAdults(adults + 1);
-                                  }}
-                                >
-                                  +
-                                </Button>
+                            {[
+                              { label: "Adults", value: adults, key: "adults", min: 1, max: 30 },
+                              {
+                                label: "Children",
+                                value: children,
+                                key: "children",
+                                min: 0,
+                                max: 10,
+                              },
+                              { label: "Rooms", value: rooms, key: "rooms", min: 1, max: 30 },
+                            ].map(({ label, value, key, min, max }) => (
+                              <div key={label} className="grid grid-cols-3 items-center gap-4">
+                                <Label>{label}</Label>
+                                <div className="col-span-2 col-start-2 flex items-center justify-between rounded-md border px-8 py-px">
+                                  <Button
+                                    size="sm"
+                                    onClick={() => {
+                                      const num = parseInt(value.toString() ?? "0");
+                                      if (num > min) {
+                                        const updated = (num - 1).toString();
+                                        setFilters({ [key]: updated });
+                                        form.setValue(key as any, updated);
+                                      }
+                                    }}
+                                  >
+                                    -
+                                  </Button>
+                                  <span className="text-center">{value}</span>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => {
+                                      const num = parseInt(value.toString() ?? "0");
+                                      if (num < max) {
+                                        const updated = (num + 1).toString();
+                                        setFilters({ [key]: updated });
+                                        form.setValue(key as any, updated);
+                                      }
+                                    }}
+                                  >
+                                    +
+                                  </Button>
+                                </div>
                               </div>
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-4">
-                              <Label htmlFor="children">Children</Label>
-                              <div className=" col-span-2 col-start-2 flex  items-center  justify-between rounded-md border px-8 py-px">
-                                <Button
-                                  size={"sm"}
-                                  onClick={() => {
-                                    children > 0 && setChildren(children - 1);
-                                  }}
-                                >
-                                  -
-                                </Button>
-                                <span className=" text-center">{children}</span>
-                                <Button
-                                  size={"sm"}
-                                  onClick={() => {
-                                    children < 10 && setChildren(children + 1);
-                                  }}
-                                >
-                                  +
-                                </Button>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-3 items-center gap-4">
-                              <Label htmlFor="rooms">Rooms</Label>
-                              <div className=" col-span-2 col-start-2 flex items-center justify-between rounded-md border px-8 py-px">
-                                <Button
-                                  size={"sm"}
-                                  onClick={() => {
-                                    rooms > 1 && setRooms(rooms - 1);
-                                  }}
-                                >
-                                  -
-                                </Button>
-                                <span className=" text-center">{rooms}</span>
-                                <Button
-                                  size={"sm"}
-                                  onClick={() => {
-                                    rooms < 30 && setRooms(rooms + 1);
-                                  }}
-                                >
-                                  +
-                                </Button>
-                              </div>
-                            </div>
+                            ))}
                           </div>
                         </div>
                       </PopoverContent>

@@ -1,7 +1,9 @@
 import Navbar from "@/components/Navbar/Navbar";
 import type { QueryClient } from "@tanstack/react-query";
-import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
+import { Outlet, createRootRouteWithContext, useMatch } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { useFilterStore } from "@/store/useFilterStore";
+import { useEffect } from "react";
 
 // Define router context
 interface MyRouterContext {
@@ -12,8 +14,7 @@ interface MyRouterContext {
 type searchFilters = {
   rating?: string;
   price?: string;
-  amenities?: string;
-  location?: string;
+  amenities?: string[];
   adults?: string;
   children?: string;
   rooms?: string;
@@ -26,8 +27,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   validateSearch: (search: Record<string, unknown>): searchFilters => ({
     rating: typeof search.rating === "string" ? search.rating : undefined,
     price: typeof search.price === "string" ? search.price : undefined,
-    amenities: typeof search.amenities === "string" ? search.amenities : undefined,
-    location: typeof search.location === "string" ? search.location : undefined,
+    amenities: Array.isArray(search.amenities)
+      ? search.amenities
+      : typeof search.amenities === "string"
+        ? search.amenities.split(",")
+        : [],
     adults: typeof search.adults === "string" ? search.adults : undefined,
     children: typeof search.children === "string" ? search.children : undefined,
     rooms: typeof search.rooms === "string" ? search.rooms : undefined,
@@ -38,8 +42,27 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function Home() {
-  const { rating, rooms, price, amenities, adults, checkin, checkout, children, location } =
+  const { rating, rooms, price, amenities, adults, checkin, checkout, children } =
     Route.useSearch();
+
+  const setFilters = useFilterStore((state) => state.setFilters);
+  const match = useMatch({ from: `/_appLayout/(hotelFlow)/hotels/search-results/$city/` });
+  console.log("matc city", match.params.city);
+
+  useEffect(() => {
+    const parsedFilters = {
+      rating: rating ? parseInt(rating) : undefined,
+      price: price ? (price.split("-").map(Number) as [number, number]) : undefined,
+      amenities: amenities,
+      location: match.params.city,
+      adults: adults ? parseInt(adults) : undefined,
+      children: children ? parseInt(children) : undefined,
+      rooms: rooms ? parseInt(rooms) : undefined,
+      checkin: checkin ? new Date(checkin) : undefined,
+      checkout: checkout ? new Date(checkout) : undefined,
+    };
+    setFilters(parsedFilters);
+  }, [rating, rooms, price, amenities, adults, checkin, checkout, children]);
 
   console.log(
     "writing from home search",

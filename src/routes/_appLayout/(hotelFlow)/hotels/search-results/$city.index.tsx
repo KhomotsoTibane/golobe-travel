@@ -1,3 +1,4 @@
+import FiltersFull from "@/components/Filters/FiltersFull";
 import HotelSearch from "@/components/Search/HotelSearch";
 import SearchHotelResults from "@/components/Search/SearchHotelResults";
 import { Button } from "@/components/ui/button";
@@ -106,7 +107,7 @@ function HotelSearchResults() {
             isFiltersFullOpen ? "w-4/12 opacity-100 visible" : "w-0 opacity-0 invisible"
           }`}
         >
-          {/* <FiltersFull /> */}
+          <FiltersFull />
         </div>
         {/* <Map
         properties={hotels}
