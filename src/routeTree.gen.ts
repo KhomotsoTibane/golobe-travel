@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AppLayoutImport } from './routes/_appLayout'
 import { Route as IndexImport } from './routes/index'
 import { Route as AppLayouthotelFlowHotelsIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/index'
+import { Route as AppLayouthotelFlowHotelsSearchResultsCityIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/search-results/$city.index'
 
 // Create/Update Routes
 
@@ -32,6 +33,13 @@ const AppLayouthotelFlowHotelsIndexRoute =
   AppLayouthotelFlowHotelsIndexImport.update({
     id: '/(hotelFlow)/hotels/',
     path: '/hotels/',
+    getParentRoute: () => AppLayoutRoute,
+  } as any)
+
+const AppLayouthotelFlowHotelsSearchResultsCityIndexRoute =
+  AppLayouthotelFlowHotelsSearchResultsCityIndexImport.update({
+    id: '/(hotelFlow)/hotels/search-results/$city/',
+    path: '/hotels/search-results/$city/',
     getParentRoute: () => AppLayoutRoute,
   } as any)
 
@@ -60,6 +68,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLayouthotelFlowHotelsIndexImport
       parentRoute: typeof AppLayoutImport
     }
+    '/_appLayout/(hotelFlow)/hotels/search-results/$city/': {
+      id: '/_appLayout/(hotelFlow)/hotels/search-results/$city/'
+      path: '/hotels/search-results/$city'
+      fullPath: '/hotels/search-results/$city'
+      preLoaderRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityIndexImport
+      parentRoute: typeof AppLayoutImport
+    }
   }
 }
 
@@ -67,10 +82,13 @@ declare module '@tanstack/react-router' {
 
 interface AppLayoutRouteChildren {
   AppLayouthotelFlowHotelsIndexRoute: typeof AppLayouthotelFlowHotelsIndexRoute
+  AppLayouthotelFlowHotelsSearchResultsCityIndexRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
 }
 
 const AppLayoutRouteChildren: AppLayoutRouteChildren = {
   AppLayouthotelFlowHotelsIndexRoute: AppLayouthotelFlowHotelsIndexRoute,
+  AppLayouthotelFlowHotelsSearchResultsCityIndexRoute:
+    AppLayouthotelFlowHotelsSearchResultsCityIndexRoute,
 }
 
 const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
@@ -81,12 +99,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AppLayoutRouteWithChildren
   '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
+  '/hotels/search-results/$city': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AppLayoutRouteWithChildren
   '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
+  '/hotels/search-results/$city': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
 }
 
 export interface FileRoutesById {
@@ -94,14 +114,20 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_appLayout': typeof AppLayoutRouteWithChildren
   '/_appLayout/(hotelFlow)/hotels/': typeof AppLayouthotelFlowHotelsIndexRoute
+  '/_appLayout/(hotelFlow)/hotels/search-results/$city/': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/hotels'
+  fullPaths: '/' | '' | '/hotels' | '/hotels/search-results/$city'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/hotels'
-  id: '__root__' | '/' | '/_appLayout' | '/_appLayout/(hotelFlow)/hotels/'
+  to: '/' | '' | '/hotels' | '/hotels/search-results/$city'
+  id:
+    | '__root__'
+    | '/'
+    | '/_appLayout'
+    | '/_appLayout/(hotelFlow)/hotels/'
+    | '/_appLayout/(hotelFlow)/hotels/search-results/$city/'
   fileRoutesById: FileRoutesById
 }
 
@@ -135,11 +161,16 @@ export const routeTree = rootRoute
     "/_appLayout": {
       "filePath": "_appLayout.tsx",
       "children": [
-        "/_appLayout/(hotelFlow)/hotels/"
+        "/_appLayout/(hotelFlow)/hotels/",
+        "/_appLayout/(hotelFlow)/hotels/search-results/$city/"
       ]
     },
     "/_appLayout/(hotelFlow)/hotels/": {
       "filePath": "_appLayout/(hotelFlow)/hotels/index.tsx",
+      "parent": "/_appLayout"
+    },
+    "/_appLayout/(hotelFlow)/hotels/search-results/$city/": {
+      "filePath": "_appLayout/(hotelFlow)/hotels/search-results/$city.index.tsx",
       "parent": "/_appLayout"
     }
   }

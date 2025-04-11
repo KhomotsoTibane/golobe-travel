@@ -1,0 +1,130 @@
+import FiltersFull from "@/components/Filters/FiltersFull";
+import HotelSearch from "@/components/Search/HotelSearch";
+import SearchHotelResults from "@/components/Search/SearchHotelResults";
+import { Button } from "@/components/ui/button";
+import { client } from "@/lib/api";
+import { cn } from "@/lib/utils";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { Filter } from "lucide-react";
+import { z } from "zod";
+
+const hotelSearchSchema = z.object({
+  rating: z.string().optional(),
+  amenities: z.array(z.string()).optional(),
+  price: z
+    .string()
+    .regex(/^\d+-\d+$/)
+    .optional(),
+  checkin: z
+    .string()
+    .regex(/^\d{4}\/\d{2}\/\d{2}$/) // Validate checkin date in YYYY/MM/DD format
+    .optional(),
+  checkout: z
+    .string()
+    .regex(/^\d{4}\/\d{2}\/\d{2}$/) // Validate checkout date in YYYY/MM/DD format
+    .optional(),
+  adults: z.string().optional(),
+  children: z.string().optional(),
+  rooms: z.string().optional(),
+  location: z.string().optional(),
+});
+
+export const Route = createFileRoute("/_appLayout/(hotelFlow)/hotels/search-results/$city/")({
+  component: HotelSearchResults,
+  validateSearch: hotelSearchSchema,
+  loader: async ({ params }) => {
+    const city = params.city;
+    return await client.getHotelsByLocation({
+      pageNumber: 1,
+      city,
+    });
+  },
+});
+
+function HotelSearchResults() {
+  const initialData = Route.useLoaderData();
+  const search = Route.useSearch();
+  const { city } = Route.useParams();
+
+  const rating = search.rating ?? undefined;
+  const price = search.price ?? "";
+  const parsedPrice = price?.split("-").map(Number) as [number, number];
+  const priceRange = price.split("-").map(Number) as [number, number];
+  const amenities = search.amenities ?? [];
+  const adults = search.adults ?? "";
+  const children = search.children ?? "";
+  const rooms = search.rooms ?? "";
+
+  const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } =
+    useInfiniteQuery({
+      queryKey: ["hotel-results", rating, price, amenities],
+      queryFn: ({ pageParam = 2 }) =>
+        client.getHotelsByLocation({
+          pageNumber: pageParam,
+          city,
+          rating,
+          price: parsedPrice,
+          amenities,
+        }),
+      initialPageParam: 2,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      initialData: {
+        pages: [initialData],
+        pageParams: [1],
+      },
+    });
+
+  const hotels = data?.pages.flatMap((pages) => pages.data) ?? [];
+  const totalCount = data?.pages[0].totalCount ?? 0;
+  const isFiltersFullOpen = true;
+  return (
+    <div
+      className="w-full mx-auto px-5 flex flex-col mt-24"
+      style={{
+        height: `calc(100vh - ${52}px)`,
+      }}
+    >
+      <div className="flex justify-between items-center w-full py-5 ">
+        <Button
+          variant="outline"
+          className={cn(
+            "gap-2 rounded-md border-primary-400 hover:bg-primary-500 hover:text-primary-100",
+            isFiltersFullOpen && "bg-primary-700 text-primary-100"
+          )}
+          // onClick={() => {
+          //   setIsFiltersFullOpen(!isFiltersFullOpen);
+          // }}
+        >
+          <Filter className="w-4 h-4" />
+          <span>All Filters</span>
+        </Button>
+        <HotelSearch icon />
+      </div>
+      <div className="flex justify-between flex-1 overflow-hidden gap-3 mb-5">
+        <div
+          className={`h-full overflow-auto transition-all duration-300 ease-in-out ${
+            isFiltersFullOpen ? "w-4/12 opacity-100 visible" : "w-0 opacity-0 invisible"
+          }`}
+        >
+          <FiltersFull />
+        </div>
+        {/* <Map
+        properties={hotels}
+        error={error}
+        status={status}
+        isFetching={isFetching}
+        entity={entityData}
+      /> */}
+        <div className="basis-8/12 overflow-y-auto no-scrollbar" style={{ overflowY: "scroll" }}>
+          <SearchHotelResults
+            searchResults={hotels}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
