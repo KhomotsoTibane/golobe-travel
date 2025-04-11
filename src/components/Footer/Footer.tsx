@@ -50,8 +50,12 @@ const Footer = () => {
               <div key={`${index}-${section.title}`} className="flex flex-col gap-3">
                 <p className="font-bold">{section.title}</p>
                 <div className="flex flex-col gap-1">
-                  {section.links.map((link) => (
-                    <Link key={link.url} className="montserrat__medium text-black/70" to={link.url}>
+                  {section.links.map((link, index) => (
+                    <Link
+                      key={`${link.url}-${index}`}
+                      className="montserrat__medium text-black/70"
+                      to={link.url}
+                    >
                       {link.label}
                     </Link>
                   ))}

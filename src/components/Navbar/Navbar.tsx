@@ -39,10 +39,14 @@ const Navbar = ({ textWhite }: NavProps) => {
 
         <div className="flex items-center justify-center gap-1 max-sm:hidden">
           <Button asChild variant={"link"}>
-            <Link to="/">Login</Link>
+            <Link to="/" search={{}}>
+              Login
+            </Link>
           </Button>
           <Button asChild variant={"link"} className="bg-white text-black">
-            <Link to="/">Sign up</Link>
+            <Link to="/" search={{}}>
+              Sign up
+            </Link>
           </Button>
         </div>
       </div>

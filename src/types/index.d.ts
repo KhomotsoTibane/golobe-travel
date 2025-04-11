@@ -6,6 +6,27 @@ export type LocationEntity = {
   lng?: string;
 };
 
+export type PaginatedHotelResponse = {
+  data: SearchResultsProps[];
+  totalCount: number;
+  nextCursor?: number | null;
+};
+
+export type pageParams = {
+  pageNumber: number;
+  city: string;
+  rating?: string;
+  price?: [number, number];
+  amenities?: string[];
+  children?: string;
+  adults?: string;
+  rooms?: string;
+};
+
+export type searchByEntityParams = {
+  city: string;
+};
+
 import type { StringValidation } from "zod";
 
 export interface heroSectionProps {
