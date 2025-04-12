@@ -1,7 +1,7 @@
 import { NavbarLinks } from "@/constants";
 import Logo from "@/assets/images/logo.png";
 import { Button } from "../ui/button";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { userQueryOptions } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { Heart } from "lucide-react";
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut } from "aws-amplify/auth";
+import { cn } from "@/lib/utils";
 
 interface NavProps {
   textWhite?: boolean;
@@ -21,6 +22,11 @@ interface NavProps {
 
 const Navbar = ({ textWhite }: NavProps) => {
   const { data } = useQuery(userQueryOptions);
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
+
+  console.log("path", pathname);
   const handleLogout = async () => {
     await signOut();
   };
@@ -32,23 +38,28 @@ const Navbar = ({ textWhite }: NavProps) => {
         <div className="grid grid-cols-3 lg:gap-72">
           <div className="col-span-1 flex  items-center justify-center lg:gap-8">
             {NavbarLinks.map((item) => {
-              const isActive = false;
+              const isActive = pathname.includes(item.link);
 
               return (
                 <div key={item.link} className="relative">
-                  <Button asChild variant={"link"}>
+                  <Button asChild variant={"link"} className={cn("text-black")}>
                     <Link
                       to={item.link}
                       className={`flex w-full items-center justify-center gap-1`}
                     >
-                      <img src={item.imageUrl} width={24} height={24} alt={`${item.label}-icon`} />
+                      <img
+                        src={item.imageUrlDark}
+                        width={24}
+                        height={24}
+                        alt={`${item.label}-icon`}
+                      />
                       <p>{item.label}</p>
                     </Link>
                   </Button>
 
-                  <span
-                    className={` absolute -bottom-3 ${isActive ? "h-1 w-full  bg-primary-400" : ""}`}
-                  ></span>
+                  {isActive && (
+                    <span className="absolute left-0 -bottom-2 h-1 w-full bg-primary-400" />
+                  )}
                 </div>
               );
             })}
