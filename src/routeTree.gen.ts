@@ -19,6 +19,7 @@ import { Route as AuthenticatedFavoritesImport } from './routes/_authenticated/f
 import { Route as AuthenticatedBookingImport } from './routes/_authenticated/booking'
 import { Route as AppLayouthotelFlowHotelsIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/index'
 import { Route as AppLayouthotelFlowHotelsSearchResultsCityIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/search-results/$city.index'
+import { Route as AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/index'
 import { Route as AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName.index'
 
 // Create/Update Routes
@@ -68,6 +69,13 @@ const AppLayouthotelFlowHotelsSearchResultsCityIndexRoute =
   AppLayouthotelFlowHotelsSearchResultsCityIndexImport.update({
     id: '/(hotelFlow)/hotels/search-results/$city/',
     path: '/hotels/search-results/$city/',
+    getParentRoute: () => AppLayoutRoute,
+  } as any)
+
+const AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute =
+  AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexImport.update({
+    id: '/(hotelFlow)/hotels/(bookingFlow)/booking-summary/',
+    path: '/hotels/booking-summary/',
     getParentRoute: () => AppLayoutRoute,
   } as any)
 
@@ -131,6 +139,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLayouthotelFlowHotelsIndexImport
       parentRoute: typeof AppLayoutImport
     }
+    '/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/': {
+      id: '/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/'
+      path: '/hotels/booking-summary'
+      fullPath: '/hotels/booking-summary'
+      preLoaderRoute: typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexImport
+      parentRoute: typeof AppLayoutImport
+    }
     '/_appLayout/(hotelFlow)/hotels/search-results/$city/': {
       id: '/_appLayout/(hotelFlow)/hotels/search-results/$city/'
       path: '/hotels/search-results/$city'
@@ -152,12 +167,15 @@ declare module '@tanstack/react-router' {
 
 interface AppLayoutRouteChildren {
   AppLayouthotelFlowHotelsIndexRoute: typeof AppLayouthotelFlowHotelsIndexRoute
+  AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute: typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute
   AppLayouthotelFlowHotelsSearchResultsCityIndexRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
   AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
 }
 
 const AppLayoutRouteChildren: AppLayoutRouteChildren = {
   AppLayouthotelFlowHotelsIndexRoute: AppLayouthotelFlowHotelsIndexRoute,
+  AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute:
+    AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute,
   AppLayouthotelFlowHotelsSearchResultsCityIndexRoute:
     AppLayouthotelFlowHotelsSearchResultsCityIndexRoute,
   AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute:
@@ -191,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
+  '/hotels/booking-summary': typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute
   '/hotels/search-results/$city': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
   '/hotels/search-results/$city/$hotelName': typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
 }
@@ -202,6 +221,7 @@ export interface FileRoutesByTo {
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
+  '/hotels/booking-summary': typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute
   '/hotels/search-results/$city': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
   '/hotels/search-results/$city/$hotelName': typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
 }
@@ -215,6 +235,7 @@ export interface FileRoutesById {
   '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_appLayout/(hotelFlow)/hotels/': typeof AppLayouthotelFlowHotelsIndexRoute
+  '/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/': typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute
   '/_appLayout/(hotelFlow)/hotels/search-results/$city/': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
   '/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/': typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
 }
@@ -228,6 +249,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/profile'
     | '/hotels'
+    | '/hotels/booking-summary'
     | '/hotels/search-results/$city'
     | '/hotels/search-results/$city/$hotelName'
   fileRoutesByTo: FileRoutesByTo
@@ -238,6 +260,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/profile'
     | '/hotels'
+    | '/hotels/booking-summary'
     | '/hotels/search-results/$city'
     | '/hotels/search-results/$city/$hotelName'
   id:
@@ -249,6 +272,7 @@ export interface FileRouteTypes {
     | '/_authenticated/favorites'
     | '/_authenticated/profile'
     | '/_appLayout/(hotelFlow)/hotels/'
+    | '/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/'
     | '/_appLayout/(hotelFlow)/hotels/search-results/$city/'
     | '/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/'
   fileRoutesById: FileRoutesById
@@ -288,6 +312,7 @@ export const routeTree = rootRoute
       "filePath": "_appLayout.tsx",
       "children": [
         "/_appLayout/(hotelFlow)/hotels/",
+        "/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/",
         "/_appLayout/(hotelFlow)/hotels/search-results/$city/",
         "/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/"
       ]
@@ -314,6 +339,10 @@ export const routeTree = rootRoute
     },
     "/_appLayout/(hotelFlow)/hotels/": {
       "filePath": "_appLayout/(hotelFlow)/hotels/index.tsx",
+      "parent": "/_appLayout"
+    },
+    "/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/": {
+      "filePath": "_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/index.tsx",
       "parent": "/_appLayout"
     },
     "/_appLayout/(hotelFlow)/hotels/search-results/$city/": {

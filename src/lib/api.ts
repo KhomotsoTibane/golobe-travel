@@ -1,4 +1,7 @@
 import type {
+  bookingPriceParams,
+  bookingPriceProps,
+  confirmBookingPriceParams,
   detailsSearchParmas,
   LocationEntity,
   pageParams,
@@ -123,6 +126,69 @@ export const client = {
     if (!res.ok) {
       throw new Error(res.statusText);
     }
+    const json = await res.json();
+    return json;
+  },
+  async getBookingTotalPrice(params: bookingPriceParams): Promise<bookingPriceProps> {
+    const { checkin, checkout, adults, children, rooms, basePrice } = params;
+
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/hotel-booking/calculate-booking-total`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          checkinDate: checkin,
+          checkoutDate: checkout,
+          adults,
+          children,
+          rooms,
+          baseNightlyRate: basePrice,
+        }),
+      }
+    );
+
+    const json = await res.json();
+    return json;
+  },
+  async confirmBooking(params: confirmBookingPriceParams) {
+    const {
+      checkin,
+      checkout,
+      adults,
+      children,
+      rooms,
+      basePrice,
+      serviceFee,
+      taxes,
+      hotelId,
+      userId,
+    } = params;
+
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/hotel-booking/create-hotel-booking`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          hotelId: hotelId,
+          checkinDate: checkin,
+          checkoutDate: checkout,
+          adults,
+          children,
+          rooms,
+          basePrice,
+          serviceFee,
+          taxes,
+        }),
+      }
+    );
+
     const json = await res.json();
     return json;
   },

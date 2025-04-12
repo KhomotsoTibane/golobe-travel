@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Breadcrumb,
@@ -20,9 +20,9 @@ import {
 import { heart, locationDark, salmonStar, sparkle } from "@/assets/icons";
 import { client } from "@/lib/api";
 import SpringModal from "@/components/Modal/AmenitiesModal";
-import { z } from "zod";
 import { ImageCarousel } from "@/components/Carousel/ImageCarousel";
-import { useFilterStore } from "@/store/useFilterStore";
+import { useHotelStore } from "@/store/useHotelDetailsStore";
+import { formatCurrency } from "@/lib/utils";
 
 export const Route = createFileRoute(
   "/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/"
@@ -34,49 +34,22 @@ function HotelDetails() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCarouselOpen, setIsCarouselOpen] = useState(false);
   const { hotelName, city } = Route.useParams();
-  const test = Route.useParams();
+  const { setSelectedHotel, removeSelectedHotel } = useHotelStore();
 
   const { data, error } = useQuery({
     queryKey: ["hotel-details", hotelName],
     queryFn: async () => client.getHotelDetails({ hotelName }),
   });
 
-  const {
-    rating,
-
-    price,
-    amenities,
-    adults,
-    checkin,
-    checkout,
-    children,
-    location,
-    setFilters,
-  } = useFilterStore();
-
-  console.log(
-    "saying this form hotel search baba",
-    "rating-",
-    rating,
-
-    "price-",
-    price,
-    "amenities-",
-    amenities,
-    "adults-",
-    adults,
-    "checkin-",
-    checkin,
-    "checkout-",
-    checkout,
-    "children-",
-    children,
-    "location-",
-    location
-  );
+  useEffect(() => {
+    if (data) {
+      removeSelectedHotel;
+      setSelectedHotel(data);
+    }
+  }, [data]);
 
   if (!data) return <div>No results found</div>;
-  console.log("details dayda", data);
+
   const array = Array.from({ length: 5 }, (_, index) => index);
   const rooms = [
     {
@@ -208,7 +181,7 @@ function HotelDetails() {
           </div>
           <div className="">
             <h5 className="montserrat__bold relative w-full text-accent-400">
-              {data.hotelLowestPrice}
+              {formatCurrency(data.hotelLowestPrice)}
               <span className="montserrat__bold small">/{"night"}</span>
             </h5>
           </div>
@@ -235,7 +208,7 @@ function HotelDetails() {
             <Button variant="outline" className="border-primary-400">
               <img src={heart} width={16} height={16} alt="heart-icon" />
             </Button>
-            <Link to={`/booking`} search={(prev) => prev}>
+            <Link to={`/hotels/booking-summary`} search={(prev) => prev}>
               <Button variant="default" className="montserrat__semibold w-full text-black">
                 Book Now
               </Button>
@@ -338,10 +311,10 @@ function HotelDetails() {
                 </div>
                 <div className="flex items-center gap-16">
                   <h5 className="montserrat__semibold">
-                    {room.price}
+                    {formatCurrency(room.price)}
                     <small className="">/night</small>
                   </h5>
-                  <Link to={`/`}>
+                  <Link to={`/hotels/booking-summary`} search={(prev) => prev}>
                     <Button variant="default" className="montserrat__semibold text-black">
                       Book Now
                     </Button>

@@ -71,23 +71,10 @@ function Home() {
     setFilters(parsedFilters);
   }, [rating, rooms, price, amenities, adults, checkin, checkout, children]);
 
-  console.log(
-    "Filters from root",
-    rating,
-    rooms,
-    price,
-    amenities,
-    adults,
-    checkin,
-    checkout,
-    children,
-    location
-  );
-
   return (
-    <div className="grid h-full grid-rows-[auto,_1fr]">
+    <div className="grid h-full grid-rows-[auto,_1fr] w-full overflow-x-hidden">
       <Navbar />
-      <div className="h-full px-4">
+      <div className="h-full max-w-screen w-full">
         <Outlet />
       </div>
       <TanStackRouterDevtools />
