@@ -192,4 +192,14 @@ export const client = {
     const json = await res.json();
     return json;
   },
+  async toggleUserFavoriteHotel(params: userFavoriteParams) {
+    const { id, hotelId } = params;
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user-favorites/${id}/toggle`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        hotelId: hotelId,
+      }),
+    });
+  },
 };
