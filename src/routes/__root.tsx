@@ -31,7 +31,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       ? search.amenities
       : typeof search.amenities === "string"
         ? search.amenities.split(",")
-        : [],
+        : undefined,
     adults: typeof search.adults === "string" ? search.adults : undefined,
     children: typeof search.children === "string" ? search.children : undefined,
     rooms: typeof search.rooms === "string" ? search.rooms : undefined,
@@ -49,17 +49,18 @@ function Home() {
   // const match = useMatch({ from: `/_appLayout/(hotelFlow)/hotels/search-results/$city/` });
   // console.log("matc city", match.params.city);
   const matches = useMatches();
-  const searchMatch = matches.find((m) => m.routeId?.includes("hotels/search-results"));
+  const isSearchResultsPage = useMatches().find((m) => m.routeId?.includes("search-results/$city"));
 
-  console.log("dkjhfjkds", searchMatch);
+  const searchMatch = matches.find((m) => m.routeId?.includes("hotels/search-results"));
 
   const city = (searchMatch?.params as { city: string })?.city;
 
   useEffect(() => {
+    if (!isSearchResultsPage) return;
     const parsedFilters = {
       rating: rating ? parseInt(rating) : undefined,
       price: price ? (price.split("-").map(Number) as [number, number]) : undefined,
-      amenities: amenities,
+      amenities: amenities ? amenities : undefined,
       location: city,
       adults: adults ? parseInt(adults) : undefined,
       children: children ? parseInt(children) : undefined,
@@ -71,7 +72,7 @@ function Home() {
   }, [rating, rooms, price, amenities, adults, checkin, checkout, children]);
 
   console.log(
-    "writing from home search",
+    "Filters from root",
     rating,
     rooms,
     price,
@@ -85,7 +86,7 @@ function Home() {
 
   return (
     <div className="grid h-full grid-rows-[auto,_1fr]">
-      <Navbar textWhite />
+      <Navbar />
       <div className="h-full px-4">
         <Outlet />
       </div>

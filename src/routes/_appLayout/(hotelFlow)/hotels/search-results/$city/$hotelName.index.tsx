@@ -22,6 +22,7 @@ import { client } from "@/lib/api";
 import SpringModal from "@/components/Modal/AmenitiesModal";
 import { z } from "zod";
 import { ImageCarousel } from "@/components/Carousel/ImageCarousel";
+import { useFilterStore } from "@/store/useFilterStore";
 
 export const Route = createFileRoute(
   "/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/"
@@ -34,11 +35,45 @@ function HotelDetails() {
   const [isCarouselOpen, setIsCarouselOpen] = useState(false);
   const { hotelName, city } = Route.useParams();
   const test = Route.useParams();
-  console.log("test", test);
+
   const { data, error } = useQuery({
     queryKey: ["hotel-details", hotelName],
     queryFn: async () => client.getHotelDetails({ hotelName }),
   });
+
+  const {
+    rating,
+
+    price,
+    amenities,
+    adults,
+    checkin,
+    checkout,
+    children,
+    location,
+    setFilters,
+  } = useFilterStore();
+
+  console.log(
+    "saying this form hotel search baba",
+    "rating-",
+    rating,
+
+    "price-",
+    price,
+    "amenities-",
+    amenities,
+    "adults-",
+    adults,
+    "checkin-",
+    checkin,
+    "checkout-",
+    checkout,
+    "children-",
+    children,
+    "location-",
+    location
+  );
 
   if (!data) return <div>No results found</div>;
   console.log("details dayda", data);
@@ -200,11 +235,11 @@ function HotelDetails() {
             <Button variant="outline" className="border-primary-400">
               <img src={heart} width={16} height={16} alt="heart-icon" />
             </Button>
-            {/* <Link to={`/booking`}>
+            <Link to={`/booking`} search={(prev) => prev}>
               <Button variant="default" className="montserrat__semibold w-full text-black">
                 Book Now
               </Button>
-            </Link> */}
+            </Link>
           </div>
         </div>
 

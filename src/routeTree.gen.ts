@@ -11,13 +11,22 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AppLayoutImport } from './routes/_appLayout'
 import { Route as IndexImport } from './routes/index'
+import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedFavoritesImport } from './routes/_authenticated/favorites'
+import { Route as AuthenticatedBookingImport } from './routes/_authenticated/booking'
 import { Route as AppLayouthotelFlowHotelsIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/index'
 import { Route as AppLayouthotelFlowHotelsSearchResultsCityIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/search-results/$city.index'
 import { Route as AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName.index'
 
 // Create/Update Routes
+
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AppLayoutRoute = AppLayoutImport.update({
   id: '/_appLayout',
@@ -28,6 +37,24 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedFavoritesRoute = AuthenticatedFavoritesImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedBookingRoute = AuthenticatedBookingImport.update({
+  id: '/booking',
+  path: '/booking',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 const AppLayouthotelFlowHotelsIndexRoute =
@@ -68,6 +95,34 @@ declare module '@tanstack/react-router' {
       fullPath: ''
       preLoaderRoute: typeof AppLayoutImport
       parentRoute: typeof rootRoute
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated/booking': {
+      id: '/_authenticated/booking'
+      path: '/booking'
+      fullPath: '/booking'
+      preLoaderRoute: typeof AuthenticatedBookingImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/favorites': {
+      id: '/_authenticated/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof AuthenticatedFavoritesImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/_appLayout/(hotelFlow)/hotels/': {
       id: '/_appLayout/(hotelFlow)/hotels/'
@@ -113,9 +168,28 @@ const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
   AppLayoutRouteChildren,
 )
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedBookingRoute: typeof AuthenticatedBookingRoute
+  AuthenticatedFavoritesRoute: typeof AuthenticatedFavoritesRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedBookingRoute: AuthenticatedBookingRoute,
+  AuthenticatedFavoritesRoute: AuthenticatedFavoritesRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '': typeof AppLayoutRouteWithChildren
+  '': typeof AuthenticatedRouteWithChildren
+  '/booking': typeof AuthenticatedBookingRoute
+  '/favorites': typeof AuthenticatedFavoritesRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
   '/hotels/search-results/$city': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
   '/hotels/search-results/$city/$hotelName': typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
@@ -123,7 +197,10 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '': typeof AppLayoutRouteWithChildren
+  '': typeof AuthenticatedRouteWithChildren
+  '/booking': typeof AuthenticatedBookingRoute
+  '/favorites': typeof AuthenticatedFavoritesRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
   '/hotels/search-results/$city': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
   '/hotels/search-results/$city/$hotelName': typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
@@ -133,6 +210,10 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/_appLayout': typeof AppLayoutRouteWithChildren
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_authenticated/booking': typeof AuthenticatedBookingRoute
+  '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_appLayout/(hotelFlow)/hotels/': typeof AppLayouthotelFlowHotelsIndexRoute
   '/_appLayout/(hotelFlow)/hotels/search-results/$city/': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
   '/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/': typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
@@ -143,6 +224,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
+    | '/booking'
+    | '/favorites'
+    | '/profile'
     | '/hotels'
     | '/hotels/search-results/$city'
     | '/hotels/search-results/$city/$hotelName'
@@ -150,6 +234,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | ''
+    | '/booking'
+    | '/favorites'
+    | '/profile'
     | '/hotels'
     | '/hotels/search-results/$city'
     | '/hotels/search-results/$city/$hotelName'
@@ -157,6 +244,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_appLayout'
+    | '/_authenticated'
+    | '/_authenticated/booking'
+    | '/_authenticated/favorites'
+    | '/_authenticated/profile'
     | '/_appLayout/(hotelFlow)/hotels/'
     | '/_appLayout/(hotelFlow)/hotels/search-results/$city/'
     | '/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/'
@@ -166,11 +257,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppLayoutRoute: typeof AppLayoutRouteWithChildren
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppLayoutRoute: AppLayoutRouteWithChildren,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -184,7 +277,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/_appLayout"
+        "/_appLayout",
+        "/_authenticated"
       ]
     },
     "/": {
@@ -197,6 +291,26 @@ export const routeTree = rootRoute
         "/_appLayout/(hotelFlow)/hotels/search-results/$city/",
         "/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/"
       ]
+    },
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/booking",
+        "/_authenticated/favorites",
+        "/_authenticated/profile"
+      ]
+    },
+    "/_authenticated/booking": {
+      "filePath": "_authenticated/booking.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/favorites": {
+      "filePath": "_authenticated/favorites.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/profile": {
+      "filePath": "_authenticated/profile.tsx",
+      "parent": "/_authenticated"
     },
     "/_appLayout/(hotelFlow)/hotels/": {
       "filePath": "_appLayout/(hotelFlow)/hotels/index.tsx",

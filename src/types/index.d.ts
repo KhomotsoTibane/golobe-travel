@@ -23,6 +23,11 @@ export type pageParams = {
   rooms?: string;
 };
 
+export type userFavoriteParams = {
+  id: string;
+  hotelId?: string;
+};
+
 export type detailsSearchParmas = {
   hotelName: string;
 };

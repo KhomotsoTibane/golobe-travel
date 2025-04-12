@@ -2,12 +2,28 @@ import { NavbarLinks } from "@/constants";
 import Logo from "@/assets/images/logo.png";
 import { Button } from "../ui/button";
 import { Link } from "@tanstack/react-router";
+import { userQueryOptions } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+import { Heart } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { signOut } from "aws-amplify/auth";
 
 interface NavProps {
-  textWhite: boolean;
+  textWhite?: boolean;
 }
 
 const Navbar = ({ textWhite }: NavProps) => {
+  const { data } = useQuery(userQueryOptions);
+  const handleLogout = async () => {
+    await signOut();
+  };
   return (
     <div className="relative h-20 card-shadow w-screen">
       <nav
@@ -41,17 +57,62 @@ const Navbar = ({ textWhite }: NavProps) => {
             <img src={Logo} width={100} height={100} alt="logo" className="col-span-1" />
           </div>
 
-          <div className="flex items-center justify-center gap-1 max-sm:hidden">
-            <Button asChild variant={"link"}>
-              <Link to="/" search={{}}>
-                Login
-              </Link>
-            </Button>
-            <Button asChild variant={"link"} className="bg-white text-black">
-              <Link to="/" search={{}}>
-                Sign up
-              </Link>
-            </Button>
+          <div className="flex justify-end items-center gap-5">
+            {data ? (
+              <>
+                <div
+                  className={`${textWhite ? "text-white" : "text-black"} relative hidden md:flex gap-1 items-center `}
+                >
+                  <Link to={"/favorites"}>
+                    <Button variant={"ghost"} className="border-primary-400">
+                      <Heart
+                        fill={`${textWhite ? "#fff" : "#000"}`}
+                        className="w-6 h-6 cursor-pointer"
+                      />
+                      <small>Favorites</small>
+                    </Button>
+                  </Link>
+                </div>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex items-center gap-2 focus:outline-none">
+                    <Avatar>
+                      {/* <AvatarImage src={authUser.userInfo?.image} /> */}
+                      <AvatarFallback className="bg-primary-600">
+                        {/* {authUser.userRole?.[0].toUpperCase()} */}
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className={`${textWhite ? "text-white" : "text-black"}  hidden md:block`}>
+                      {data?.cognitoInfo.username}
+                    </p>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-white text-primary-700">
+                    <DropdownMenuItem className="hover:!bg-primary-700 hover:!text-primary-100 font-bold">
+                      <Link to="/profile">Manage Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="bg-primary-200" />
+                    <DropdownMenuItem className="hover:!bg-primary-700 hover:!text-primary-100">
+                      Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:!bg-primary-700 hover:!text-primary-100"
+                      onClick={handleLogout}
+                    >
+                      Sign out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <>
+                <Button asChild variant="link">
+                  <Link to="/profile">Login</Link>
+                </Button>
+                <Button asChild variant="link" className="bg-white text-black">
+                  <Link to="/profile">Sign up</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </nav>

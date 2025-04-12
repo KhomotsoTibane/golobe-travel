@@ -5,7 +5,50 @@ import type {
   PaginatedHotelResponse,
   searchByEntityParams,
   SearchHotelDetailResultsProps,
+  userFavoriteParams,
 } from "@/types";
+import { queryOptions } from "@tanstack/react-query";
+import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
+
+export const userQueryOptions = queryOptions({
+  queryKey: ["get-current-user"],
+  queryFn: fetchCurrentUser,
+});
+
+async function fetchCurrentUser() {
+  try {
+    const user = await getCurrentUser();
+    const session = await fetchAuthSession();
+    const email = session.tokens?.idToken?.payload.email;
+    // const { idToken } = session.tokens ?? {};
+
+    let res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/${user.userId}`);
+    let userDetails = res.ok ? await res.json() : null;
+
+    if (!userDetails && res.status === 404) {
+      const createRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cognitoId: user.userId,
+          name: user.username,
+          email,
+        }),
+      });
+      userDetails = await createRes.json();
+    }
+
+    return {
+      cognitoInfo: user,
+      userDetails,
+    };
+  } catch (error) {
+    console.error("Error in fetchCurrentUser", error);
+    return null;
+  }
+}
 
 export const client = {
   async getHotelEntities() {
@@ -14,7 +57,7 @@ export const client = {
       throw new Error(res.statusText);
     }
     const json = await res.json();
-    console.log(json);
+
     return json as LocationEntity[];
   },
   async getHotelEntityByName(params: searchByEntityParams): Promise<LocationEntity[]> {
@@ -24,7 +67,7 @@ export const client = {
       throw new Error(res.statusText);
     }
     const json = await res.json();
-    console.log(json);
+
     return json as LocationEntity[];
   },
   async getHotelsByLocation(params: pageParams): Promise<PaginatedHotelResponse> {
@@ -58,7 +101,7 @@ export const client = {
     }
     const json = await res.json();
     const totalPages = Math.ceil(json.totalCount / 3);
-    console.log("api response", json);
+
     return {
       data: json.data,
       totalCount: json.totalCount,
@@ -72,7 +115,15 @@ export const client = {
       throw new Error(res.statusText);
     }
     const json = await res.json();
-    console.log("api response 2", json);
+    return json;
+  },
+  async getUserFavorites(params: userFavoriteParams) {
+    const { id } = params;
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user-favorites/${id}`);
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+    const json = await res.json();
     return json;
   },
 };

@@ -4,14 +4,14 @@ import { devtools } from "zustand/middleware";
 export type FilterState = {
   rating?: number; // parsed from string
   price?: [number, number]; // parsed from "100-200"
-  amenities: string[]; // parsed from comma-separated string or array
+  amenities?: string[]; // parsed from comma-separated string or array
   location?: string;
   guests?: number;
   checkin?: Date; // parsed from string to Date
   checkout?: Date;
-  rooms: number;
-  adults: number;
-  children: number;
+  rooms?: number;
+  adults?: number;
+  children?: number;
 };
 
 type FilterActions = {
@@ -22,7 +22,7 @@ type FilterActions = {
 const initialState: FilterState = {
   rating: undefined,
   price: undefined,
-  amenities: [],
+  amenities: undefined,
   location: undefined,
   guests: undefined,
   checkin: undefined,

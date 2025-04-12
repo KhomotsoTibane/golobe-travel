@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
 
 function LandingPage() {
   const hotelEntities = Route.useLoaderData();
-  console.log(hotelEntities);
+
   return (
     <section className="w-full">
       <div
