@@ -11,8 +11,6 @@ const FiltersFull = () => {
   const routerState = useRouterState();
   const currentSearch = routerState.location.search;
 
-  console.log("filters", { rating, price, amenities });
-
   const isFiltersFullOpen = true;
   const navigate = useNavigate({ from: "/hotels/search-results/$city" });
 

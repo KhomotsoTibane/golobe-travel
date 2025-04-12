@@ -60,28 +60,6 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
     setFilters,
   } = useFilterStore();
 
-  console.log(
-    "saying this form hotel search baba",
-    "rating-",
-    rating,
-    "rooms-",
-    rooms,
-    "price-",
-    price,
-    "amenities-",
-    amenities,
-    "adults-",
-    adults,
-    "checkin-",
-    checkin,
-    "checkout-",
-    checkout,
-    "children-",
-    children,
-    "location-",
-    location
-  );
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -104,15 +82,6 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
     const formattedCheckout = `${checkoutDate.getFullYear()}/${(checkoutDate.getMonth() + 1)
       .toString()
       .padStart(2, "0")}/${checkoutDate.getDate().toString().padStart(2, "0")}`;
-
-    console.log("Setting filters with values:", {
-      location: value.location,
-      children: children ?? parseInt(value.children!),
-      rooms: parseInt(value.rooms),
-      adults: parseInt(value.adults),
-      checkin: checkinDate,
-      checkout: checkoutDate,
-    });
 
     setFilters({
       location: value.location,

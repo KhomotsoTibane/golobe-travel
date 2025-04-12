@@ -4,6 +4,7 @@ import type { SearchResultsProps } from "@/types";
 import { coffeeDark, heart, locationDark, salmonStar } from "@/assets/icons";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/api";
+import { formatCurrency } from "@/lib/utils";
 
 const SearchHotelResultsCard = ({
   hotelId,
@@ -106,7 +107,7 @@ const SearchHotelResultsCard = ({
             <span className="smallest montserrat__medium w-full text-left text-black/75">
               from{" "}
             </span>
-            ZAR {hotelLowestPrice} <span className=""> /{rateFrequency}</span>
+            {formatCurrency(hotelLowestPrice)} <span className=""> /{rateFrequency}</span>
           </p>
         </div>
         <hr className="h-1" />

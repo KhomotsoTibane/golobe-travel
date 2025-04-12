@@ -4,6 +4,7 @@ import { userQueryOptions } from "@/lib/api";
 import PriceSummaryCard from "@/components/Cards/PriceSummaryCard";
 import { buildingDark, locationDark } from "@/assets/icons";
 import { z } from "zod";
+import { formatCurrency } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/booking")({
   component: RouteComponent,
@@ -20,7 +21,7 @@ function RouteComponent() {
             <h4>Superior room - 1 double bed or 2 twin beds</h4>
             <div>
               <h5 className="montserrat__bold relative w-full text-accent-400">
-                240
+                {formatCurrency(240)}
                 <span className="montserrat__bold small">/night</span>
               </h5>{" "}
               <p className="small montserrat__medium w-full text-black/75 lg:text-right">

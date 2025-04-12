@@ -20,26 +20,26 @@ function RouteComponent() {
     checkout,
   } = Route.useSearch();
 
-  console.log(
-    "fuck i am tired",
-    "rating-",
-    rating,
+  // console.log(
+  //   "i am tired",
+  //   "rating-",
+  //   rating,
 
-    "price-",
-    price,
-    "amenities-",
-    amenities,
-    "adults-",
-    adults,
-    "checkin-",
-    checkin,
-    "checkout-",
-    checkout,
-    "children-",
-    children,
-    "location-",
-    location
-  );
+  //   "price-",
+  //   price,
+  //   "amenities-",
+  //   amenities,
+  //   "adults-",
+  //   adults,
+  //   "checkin-",
+  //   checkin,
+  //   "checkout-",
+  //   checkout,
+  //   "children-",
+  //   children,
+  //   "location-",
+  //   location
+  // );
   const setFilters = useFilterStore((state) => state.setFilters);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ function RouteComponent() {
   }, [rating, price, amenities, location, adults, children, rooms, checkin, checkout, setFilters]);
 
   return (
-    <main className="relative min-h-screen flex flex-col">
+    <main className="relative min-h-screen flex flex-col ">
       <div className="flex-1">
         <Outlet />
       </div>

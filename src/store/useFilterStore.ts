@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 
 export type FilterState = {
   rating?: number; // parsed from string
@@ -34,16 +34,17 @@ const initialState: FilterState = {
 
 export const useFilterStore = create<FilterState & FilterActions>()(
   devtools(
-    (set) => ({
-      ...initialState,
-      setFilters: (values) =>
-        set((prev) => {
-          const updated = { ...prev, ...values };
-          console.log("Filter updated:", updated);
-          return updated;
-        }),
-      resetFilters: () => set(initialState),
-    }),
-    { name: "FilterStore" }
+    persist(
+      (set) => ({
+        ...initialState,
+        setFilters: (values) =>
+          set((prev) => {
+            const updated = { ...prev, ...values };
+            return updated;
+          }),
+        resetFilters: () => set(initialState),
+      }),
+      { name: "FilterStore" }
+    )
   )
 );

@@ -28,6 +28,47 @@ export type userFavoriteParams = {
   hotelId?: string;
 };
 
+export type bookingPriceParams = {
+  checkin: Date;
+  checkout: Date;
+  children: string;
+  adults: string;
+  rooms: string;
+  basePrice: number;
+};
+
+export type bookingPriceParams = {
+  checkin: Date;
+  checkout: Date;
+  children: string;
+  adults: string;
+  rooms: string;
+  basePrice: number;
+};
+
+export type bookingPriceProps = {
+  nights: number;
+  basePrice: number;
+  serviceFee: number;
+  taxes: number;
+  total: number;
+};
+
+export type confirmBookingPriceParams = {
+  userId: string;
+  hotelId: string;
+  checkin: Date;
+  checkout: Date;
+  children: string;
+  adults: string;
+  basePrice: number;
+  serviceFee: number;
+  taxes: number;
+  serviceFee: number;
+  taxes: number;
+  rooms: number;
+};
+
 export type detailsSearchParmas = {
   hotelName: string;
 };
@@ -36,7 +77,7 @@ export type searchByEntityParams = {
   city: string;
 };
 
-import type { StringValidation } from "zod";
+import type { number, StringValidation } from "zod";
 
 export interface heroSectionProps {
   imgUrl: string;
@@ -126,6 +167,19 @@ export interface AdditionalImage {
   thumbnail: string;
   gallery: string;
   dynamic: string;
+}
+export interface BookingSummaryCardProps {
+  hotelImageUrl: string;
+  hotelName: string;
+  hotelRoomType: string;
+  hotelReviewsScore: number;
+  hotelReviewsTotal: number;
+  hotelReviewsDesc: string;
+  basePrice: number;
+  discount: number;
+  taxes: number;
+  serviceFee: number;
+  total: number;
 }
 
 export interface SearchResultsProps {
