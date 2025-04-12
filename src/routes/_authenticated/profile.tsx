@@ -61,7 +61,7 @@ function RouteComponent() {
 
       {/* Tabs */}
       <Tabs defaultValue="account" className="mt-10 w-full">
-        <TabsList className="flex justify-center w-full h-20 bg-white card-shadow">
+        <TabsList className="flex justify-center w-full h-20 card-shadow">
           <TabsTrigger value="account">Account</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
           <TabsTrigger value="payments">Payment methods</TabsTrigger>

@@ -9,8 +9,6 @@ export const ImageCarousel = ({ images }: any) => {
   const trend = idx > prevIdx ? 1 : -1;
 
   const imageIndex = Math.abs(idx % images.length);
-  console.log("images", images);
-  console.log("ondex", imageIndex);
 
   return (
     <div className="h-full  bg-black relative w-full overflow-hidden">

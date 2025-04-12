@@ -22,7 +22,7 @@ const FiltersFull = () => {
         ...currentSearch,
         rating: rating ? rating.toString() : "",
         price: price?.join("-"),
-        amenities: amenities ? amenities : [],
+        amenities: amenities ? amenities : undefined,
       },
     });
   };

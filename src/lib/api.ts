@@ -57,7 +57,7 @@ export const client = {
       throw new Error(res.statusText);
     }
     const json = await res.json();
-    console.log(json);
+
     return json as LocationEntity[];
   },
   async getHotelEntityByName(params: searchByEntityParams): Promise<LocationEntity[]> {
@@ -67,7 +67,7 @@ export const client = {
       throw new Error(res.statusText);
     }
     const json = await res.json();
-    console.log(json);
+
     return json as LocationEntity[];
   },
   async getHotelsByLocation(params: pageParams): Promise<PaginatedHotelResponse> {
@@ -101,7 +101,7 @@ export const client = {
     }
     const json = await res.json();
     const totalPages = Math.ceil(json.totalCount / 3);
-    console.log("api response", json);
+
     return {
       data: json.data,
       totalCount: json.totalCount,
@@ -115,7 +115,6 @@ export const client = {
       throw new Error(res.statusText);
     }
     const json = await res.json();
-    console.log("api response 2", json);
     return json;
   },
   async getUserFavorites(params: userFavoriteParams) {

@@ -25,6 +25,7 @@ import { Calendar } from "@/components/ui/calendar";
 
 import { bedDark, buildingDark, calendarDark, crossDark, personDark } from "@/assets/icons/index";
 import { useFilterStore } from "@/store/useFilterStore";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { Navigate } from "@tanstack/react-router";
 
 const formSchema = z.object({
@@ -40,10 +41,12 @@ const formSchema = z.object({
   }),
   rooms: z.string(),
   adults: z.string(),
-  children: z.string().optional(),
+  children: z.string(),
 });
 
 const HotelSearch = ({ icon }: { icon: boolean }) => {
+  const routerState = useRouterState();
+  const navigate = useNavigate();
   const {
     rating,
     rooms,
@@ -56,19 +59,6 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
     location,
     setFilters,
   } = useFilterStore();
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      location: "",
-      guests: "1",
-      checkin: checkin,
-      checkout: checkout,
-      // rooms: rooms.toString(),
-      // adults: adults.toString(),
-      // children: children.toString(),
-    },
-  });
 
   console.log(
     "saying this form hotel search baba",
@@ -92,6 +82,19 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
     location
   );
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      location: "",
+      guests: "1",
+      checkin: checkin,
+      checkout: checkout,
+      rooms: rooms !== undefined ? rooms.toString() : "1",
+      adults: adults !== undefined ? adults.toString() : "2",
+      children: children !== undefined ? children.toString() : "0",
+    },
+  });
+
   function onSubmit(value: z.infer<typeof formSchema>) {
     const checkinDate = new Date(value.checkin);
     const checkoutDate = new Date(value.checkout);
@@ -102,27 +105,36 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
       .toString()
       .padStart(2, "0")}/${checkoutDate.getDate().toString().padStart(2, "0")}`;
 
-    setFilters({
+    console.log("Setting filters with values:", {
       location: value.location,
-      children: children ?? value.children,
+      children: children ?? parseInt(value.children!),
       rooms: parseInt(value.rooms),
       adults: parseInt(value.adults),
       checkin: checkinDate,
       checkout: checkoutDate,
     });
 
-    // Navigate({
-    //   to: "/hotels/search-results/$city",
-    //   params: { city: value.location },
-    //   search: {
-    //     ...routerState.location.search,
-    //     checkin: formattedCheckin,
-    //     checkout: formattedCheckout,
-    //     adults: formAdults.toString(),
-    //     children: formChildren.toString(),
-    //     rooms: formRooms.toString(),
-    //   },
-    // });
+    setFilters({
+      location: value.location,
+      children: children ?? parseInt(value.children!),
+      rooms: parseInt(value.rooms),
+      adults: parseInt(value.adults),
+      checkin: checkinDate,
+      checkout: checkoutDate,
+    });
+
+    navigate({
+      to: "/hotels/search-results/$city",
+      params: { city: value.location },
+      search: {
+        ...routerState.location.search,
+        checkin: formattedCheckin,
+        checkout: formattedCheckout,
+        adults: value.adults,
+        children: value.children,
+        rooms: value.rooms,
+      },
+    });
   }
 
   return (
@@ -255,7 +267,7 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
                               <span>
                                 · {adults} {adults === 1 ? "Adult" : "Adults"}{" "}
                               </span>
-                              {children > 0 && (
+                              {children && children > 0 && (
                                 <span>
                                   · {children} {children === 1 ? "Child" : "Children"}
                                 </span>
@@ -268,15 +280,27 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
                         <div className="grid gap-4">
                           <div className="grid gap-2">
                             {[
-                              { label: "Adults", value: adults, key: "adults", min: 1, max: 30 },
+                              {
+                                label: "Adults",
+                                value: adults !== undefined ? adults.toString() : "2",
+                                key: "adults",
+                                min: 1,
+                                max: 30,
+                              },
                               {
                                 label: "Children",
-                                value: children,
+                                value: children !== undefined ? children.toString() : "0",
                                 key: "children",
                                 min: 0,
                                 max: 10,
                               },
-                              { label: "Rooms", value: rooms, key: "rooms", min: 1, max: 30 },
+                              {
+                                label: "Rooms",
+                                value: rooms !== undefined ? rooms.toString() : "1",
+                                key: "rooms",
+                                min: 1,
+                                max: 30,
+                              },
                             ].map(({ label, value, key, min, max }) => (
                               <div key={label} className="grid grid-cols-3 items-center gap-4">
                                 <Label>{label}</Label>
@@ -284,7 +308,7 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
                                   <Button
                                     size="sm"
                                     onClick={() => {
-                                      const num = parseInt(value.toString() ?? "0");
+                                      const num = parseInt(value!.toString() ?? "0");
                                       if (num > min) {
                                         const updated = (num - 1).toString();
                                         setFilters({ [key]: updated });
@@ -298,7 +322,7 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
                                   <Button
                                     size="sm"
                                     onClick={() => {
-                                      const num = parseInt(value.toString() ?? "0");
+                                      const num = parseInt(value!.toString() ?? "0");
                                       if (num < max) {
                                         const updated = (num + 1).toString();
                                         setFilters({ [key]: updated });
@@ -323,7 +347,7 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
             <Button
               type="submit"
               variant={"default"}
-              className="flex lg:hidden items-center justify-center gap-1 text-black"
+              className="flex lg:hidden items-center justify-center gap-1 text-black z-100"
               disabled={false}
             >
               <img src={buildingDark} width={16} height={16} alt="building" />

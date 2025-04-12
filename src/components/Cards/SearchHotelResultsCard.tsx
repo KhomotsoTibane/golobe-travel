@@ -124,6 +124,7 @@ const SearchHotelResultsCard = ({
             <Link
               to={`/hotels/search-results/$city/$hotelName`}
               params={{ city: city, hotelName: hotelName }}
+              search={(prev) => prev}
             >
               View place
             </Link>

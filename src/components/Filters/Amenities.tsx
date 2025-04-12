@@ -23,9 +23,9 @@ const AmenityFilter = ({ allAmenities, maxVisible = 4 }: AmenityFilterProps) => 
   const remainingCount = uniqueAmenities.length - maxVisible;
 
   const toggleAmenity = (amenity: string) => {
-    const next = amenities.includes(amenity)
+    const next = amenities?.includes(amenity)
       ? amenities.filter((a) => a !== amenity)
-      : [...amenities, amenity];
+      : [...(amenities ?? []), amenity];
 
     setFilters({ amenities: next });
   };
@@ -37,7 +37,7 @@ const AmenityFilter = ({ allAmenities, maxVisible = 4 }: AmenityFilterProps) => 
           <div key={amenity} className="flex items-center space-x-2">
             <Checkbox
               id={amenity}
-              checked={amenities.includes(amenity)}
+              checked={amenities?.includes(amenity)}
               onCheckedChange={() => toggleAmenity(amenity)}
             />
             <Label htmlFor={amenity}>{amenity}</Label>

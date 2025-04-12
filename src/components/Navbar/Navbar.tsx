@@ -22,7 +22,6 @@ interface NavProps {
 const Navbar = ({ textWhite }: NavProps) => {
   const { data } = useQuery(userQueryOptions);
   const handleLogout = async () => {
-    console.log("signing out");
     await signOut();
   };
   return (

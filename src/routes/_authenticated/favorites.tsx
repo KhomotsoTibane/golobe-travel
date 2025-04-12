@@ -20,7 +20,6 @@ function RouteComponent() {
     enabled: !!user?.cognitoInfo.userId,
   });
 
-  console.log("daydddddda", data);
   if (error) console.error("Error loading favorites", error);
   if (isLoading) console.log("Loading favorites...");
 
@@ -33,7 +32,7 @@ function RouteComponent() {
       // style={{ overflowY: "scroll" }}
     >
       <Tabs defaultValue="hotels" className="w-full">
-        <TabsList className="h-24 w-full gap-8">
+        <TabsList className="h-24 w-full gap-8  card-shadow">
           <TabsTrigger value="flights" className="flex items-center justify-center gap-1">
             Flights
           </TabsTrigger>

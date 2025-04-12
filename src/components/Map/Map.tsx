@@ -11,15 +11,10 @@ const Map = ({ properties, error, isFetching, isFetchingNextPage, status, entity
   //   const filters = useAppSelector((state) => state.global.filters);
   //   const { data: properties, isLoading, isError } = useGetPropertiesQuery(filters);
 
-  console.log("datA", properties);
-
   useEffect(() => {
     if (isFetching || !properties) {
-      console.log("stuck in here");
       return;
     }
-
-    console.log("made it out", entity);
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current!,
@@ -83,7 +78,6 @@ const createPropertyMarker = (property: any, map: mapboxgl.Map) => {
       )
     )
     .addTo(map);
-  console.log("coords", property.hotelLongitude, property.hotelLatitude);
   return marker;
 };
 
