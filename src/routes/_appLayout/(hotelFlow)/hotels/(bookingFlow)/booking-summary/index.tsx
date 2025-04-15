@@ -9,6 +9,7 @@ import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
 import { LoginSignupCard } from "@/components/Cards/LoginSignupCard";
 import type { SearchHotelDetailResultsProps } from "@/types";
+import { format as formatTz } from "date-fns-tz";
 
 export const Route = createFileRoute(
   "/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/"
@@ -18,6 +19,7 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { selectedHotel } = useHotelStore();
+  const timeZone = "Africa/Johannesburg";
   const { checkin, checkout, rooms, adults, children } = useFilterStore();
   const { data: auth } = useQuery(userQueryOptions);
 
@@ -38,6 +40,7 @@ function RouteComponent() {
     hotelId,
   } = selectedHotel as SearchHotelDetailResultsProps;
 
+  console.log("checkin`1", checkin, "\ncheckout1", checkout);
   const { data } = useQuery({
     queryKey: [
       "booking-summary-price",
@@ -56,9 +59,30 @@ function RouteComponent() {
         adults: adults!.toString(),
         basePrice: hotelLowestPrice,
         rooms: rooms!.toString(),
+        checkinTime: hotelCheckinTime!,
+        checkoutTime: hotelCheckoutTime!,
       }),
   });
 
+  console.log("checkin2", checkin, "\ncheckout2", checkout);
+
+  function toZuluDateTime(date: Date, time: string, timeZone = "Africa/Johannesburg") {
+    // ⛳️ Split the time string — not the date!
+    const [hours, minutes] = time.split(":").map(Number);
+
+    // Copy date and apply time
+    const combined = new Date(date);
+    combined.setHours(hours);
+    combined.setMinutes(minutes);
+    combined.setSeconds(0);
+    combined.setMilliseconds(0);
+
+    // Format with timezone offset
+    return formatTz(combined, "yyyy-MM-dd'T'HH:mm:ssXXX", { timeZone });
+  }
+
+  const dateTimeCheckin = toZuluDateTime(checkin!, hotelCheckinTime!);
+  const dateTimeCheckout = toZuluDateTime(checkout!, hotelCheckoutTime!);
   const {
     mutate: confirmBooking,
     isPending,
@@ -69,14 +93,16 @@ function RouteComponent() {
       client.confirmBooking({
         userId: cognitoId,
         hotelId: hotelId,
-        checkin: checkin!,
-        checkout: checkout!,
+        checkin: dateTimeCheckin,
+        checkout: dateTimeCheckout,
         children: children!.toString(),
         adults: adults!.toString(),
         basePrice: hotelLowestPrice,
         rooms: rooms!,
         serviceFee: data?.serviceFee!,
         taxes: data?.taxes!,
+        checkinTime: hotelCheckinTime!,
+        checkoutTime: hotelCheckoutTime!,
       }),
     onSuccess: (response) => {
       console.log("confirmed!", response);

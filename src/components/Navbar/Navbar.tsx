@@ -22,6 +22,7 @@ interface NavProps {
 
 const Navbar = ({ textWhite }: NavProps) => {
   const { data } = useQuery(userQueryOptions);
+  console.log("user", data);
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
@@ -93,9 +94,11 @@ const Navbar = ({ textWhite }: NavProps) => {
                         {/* {authUser.userRole?.[0].toUpperCase()} */}
                       </AvatarFallback>
                     </Avatar>
-                    <p className={`${textWhite ? "text-white" : "text-black"}  hidden md:block`}>
-                      {data?.cognitoInfo.username}
-                    </p>
+                    <small
+                      className={`${textWhite ? "text-white" : "text-black"}  hidden md:block`}
+                    >
+                      {data?.userDetails.fullName}
+                    </small>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-white text-primary-700">
                     <DropdownMenuItem className="hover:!bg-primary-700 hover:!text-primary-100 font-bold">

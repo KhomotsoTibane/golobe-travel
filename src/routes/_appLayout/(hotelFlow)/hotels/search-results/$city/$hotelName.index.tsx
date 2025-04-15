@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -18,11 +18,12 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { heart, locationDark, salmonStar, sparkle } from "@/assets/icons";
-import { client } from "@/lib/api";
+import { client, userQueryOptions } from "@/lib/api";
 import SpringModal from "@/components/Modal/AmenitiesModal";
 import { ImageCarousel } from "@/components/Carousel/ImageCarousel";
 import { useHotelStore } from "@/store/useHotelDetailsStore";
 import { formatCurrency } from "@/lib/utils";
+import { Heart } from "lucide-react";
 
 export const Route = createFileRoute(
   "/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/"
@@ -39,6 +40,27 @@ function HotelDetails() {
   const { data, error } = useQuery({
     queryKey: ["hotel-details", hotelName],
     queryFn: async () => client.getHotelDetails({ hotelName }),
+  });
+
+  const { data: auth } = useQuery(userQueryOptions);
+  const queryClient = useQueryClient();
+
+  const toggleFavoriteMutation = useMutation({
+    mutationKey: ["toggle-user-favorites"],
+    mutationFn: async (hotelId: string) => {
+      return client.toggleUserFavoriteHotel({
+        id: auth?.cognitoInfo.userId!,
+        hotelId,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-favorites", auth?.cognitoInfo.userId!] });
+
+      queryClient.refetchQueries({
+        queryKey: ["hotel-details"],
+        exact: false,
+      });
+    },
   });
 
   useEffect(() => {
@@ -142,13 +164,13 @@ function HotelDetails() {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink>
-                <Link
+                {/* <Link
                   to={`/hotels/search-results/$city`}
                   params={{ city: city }}
                   className="text-accent-500"
-                >
-                  {city}
-                </Link>
+                > */}
+                {city}
+                {/* </Link> */}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -205,8 +227,15 @@ function HotelDetails() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <Button variant="outline" className="border-primary-400">
-              <img src={heart} width={16} height={16} alt="heart-icon" />
+            <Button
+              variant="outline"
+              size="icon"
+              className={"border-primary-400"}
+              onClick={() => toggleFavoriteMutation.mutate(data.hotelId)}
+            >
+              <Heart
+                className={`w-6 h-6 ${data.isFavorite ? "text-black fill-black border-none" : ""}`}
+              />
             </Button>
             <Link to={`/hotels/booking-summary`} search={(prev) => prev}>
               <Button variant="default" className="montserrat__semibold w-full text-black">

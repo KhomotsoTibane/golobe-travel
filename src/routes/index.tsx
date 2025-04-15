@@ -69,13 +69,14 @@ function LandingPage() {
             </div>
           </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 border">
+          <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {hotelEntities?.map((destination) => (
               <PopularDestinationCard
                 key={destination.entityName}
                 city={destination.entityName}
                 location={destination.entityHierarchy}
                 id={destination.entityId}
+                imgUrl={destination.imageUrl}
               />
             ))}
           </div>

@@ -4,6 +4,7 @@ export type LocationEntity = {
   entityId: string;
   lat?: string;
   lng?: string;
+  imageUrl: string;
 };
 
 export type PaginatedHotelResponse = {
@@ -31,15 +32,8 @@ export type userFavoriteParams = {
 export type bookingPriceParams = {
   checkin: Date;
   checkout: Date;
-  children: string;
-  adults: string;
-  rooms: string;
-  basePrice: number;
-};
-
-export type bookingPriceParams = {
-  checkin: Date;
-  checkout: Date;
+  checkinTime: string;
+  checkoutTime: string;
   children: string;
   adults: string;
   rooms: string;
@@ -57,8 +51,8 @@ export type bookingPriceProps = {
 export type confirmBookingPriceParams = {
   userId: string;
   hotelId: string;
-  checkin: Date;
-  checkout: Date;
+  checkin: string;
+  checkout: string;
   children: string;
   adults: string;
   basePrice: number;
@@ -67,6 +61,8 @@ export type confirmBookingPriceParams = {
   serviceFee: number;
   taxes: number;
   rooms: number;
+  checkinTime: string;
+  checkoutTime: string;
 };
 
 export type detailsSearchParmas = {
@@ -208,6 +204,7 @@ export interface SearchResultsProps {
   hotelAdditionalImageUrls?: AdditionalImage[];
   totalAmenities: number;
   rateFrequency: string;
+  isFavorite: boolean;
 }
 
 export interface SearchHotelDetailResultsProps {
@@ -236,6 +233,7 @@ export interface SearchHotelDetailResultsProps {
   hotelAdditionalImageUrls: AdditionalImage[];
   totalAmenities: number;
   rateFrequency: string;
+  isFavorite: boolean;
 }
 
 export type SocialLinks = {

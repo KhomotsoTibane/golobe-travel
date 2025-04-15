@@ -36,6 +36,7 @@ const SearchHotelResults = ({
             totalAmenities={result.totalAmenities}
             hotelCity={result.hotelCity}
             hotelNation={result.hotelNation}
+            isFavorite={result.isFavorite}
           />
         ))}
         {hasNextPage ? (

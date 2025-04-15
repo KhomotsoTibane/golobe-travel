@@ -4,11 +4,11 @@ import { Link } from "@tanstack/react-router";
 const PopularDestinationCard = ({ imgUrl, city, location }: PopularDestinationCardProps) => {
   const categories = ["Flights", "hotels", "resorts"];
   return (
-    <Link to="/" className="hover:scale-105">
+    <Link to={`/hotels/search-results/$city`} params={{ city: city }} className="hover:scale-105">
       <article className="card-shadow flex h-[122px] gap-4 rounded-2xl bg-white p-4 items-center">
         <div className="size-full max-h-[90px] max-w-[90px]">
           <img
-            src={"https://placehold.co/400"}
+            src={imgUrl !== "" ? imgUrl : "https://placehold.co/400"}
             width={90}
             height={90}
             alt={location}
