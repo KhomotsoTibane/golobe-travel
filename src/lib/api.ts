@@ -84,7 +84,7 @@ export const client = {
     const { idToken } = session.tokens ?? {};
 
     const query = new URLSearchParams();
-    query.set("id", city);
+    query.set("entityname", city);
     query.set("page", pageNumber.toString());
     query.set("recordsPerPage", "3");
 
@@ -104,7 +104,7 @@ export const client = {
     if (children) query.set("children", children);
 
     const res = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/get-all-hotel-data-by-entity-location?${query.toString()}`,
+      `${import.meta.env.VITE_API_BASE_URL}/by-entity-location?${query.toString()}`,
       {
         headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
       }
@@ -125,7 +125,7 @@ export const client = {
     const { hotelName } = params;
     const session = await fetchAuthSession();
     const { idToken } = session.tokens ?? {};
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/get-hotel-details/${hotelName}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/${hotelName}/details`, {
       headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
     });
     if (!res.ok) {
@@ -138,7 +138,7 @@ export const client = {
     const { id } = params;
     const session = await fetchAuthSession();
     const { idToken } = session.tokens ?? {};
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user-favorites/${id}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/favorites/user/${id}`, {
       headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
     });
     if (!res.ok) {
@@ -151,25 +151,22 @@ export const client = {
     const { checkin, checkout, adults, children, rooms, basePrice, checkoutTime, checkinTime } =
       params;
 
-    const res = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/hotel-booking/calculate-booking-total`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          checkinDate: checkin,
-          checkoutDate: checkout,
-          adults,
-          children,
-          rooms,
-          baseNightlyRate: basePrice,
-          checkinTime,
-          checkoutTime,
-        }),
-      }
-    );
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/hotel-booking/calculate-total`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        checkinDate: checkin,
+        checkoutDate: checkout,
+        adults,
+        children,
+        rooms,
+        baseNightlyRate: basePrice,
+        checkinTime,
+        checkoutTime,
+      }),
+    });
 
     const json = await res.json();
     return json;
@@ -193,27 +190,24 @@ export const client = {
     const session = await fetchAuthSession();
     const { idToken } = session.tokens ?? {};
 
-    const res = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/hotel-booking/create-hotel-booking`,
-      {
-        method: "POST",
-        headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userId,
-          hotelId: hotelId,
-          checkinDate: checkin,
-          checkoutDate: checkout,
-          adults,
-          children,
-          rooms,
-          basePrice,
-          serviceFee,
-          taxes,
-          checkinTime,
-          checkoutTime,
-        }),
-      }
-    );
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/hotel-booking/create-new`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: userId,
+        hotelId: hotelId,
+        checkinDate: checkin,
+        checkoutDate: checkout,
+        adults,
+        children,
+        rooms,
+        basePrice,
+        serviceFee,
+        taxes,
+        checkinTime,
+        checkoutTime,
+      }),
+    });
 
     const json = await res.json();
     return json;
@@ -222,7 +216,7 @@ export const client = {
     const { id, hotelId } = params;
     const session = await fetchAuthSession();
     const { idToken } = session.tokens ?? {};
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user-favorites/${id}/toggle`, {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/favorites/user/${id}/toggle`, {
       method: "POST",
       headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
       body: JSON.stringify({

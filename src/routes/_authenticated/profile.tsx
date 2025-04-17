@@ -27,12 +27,12 @@ function RouteComponent() {
           backgroundSize: "cover",
         }}
       >
-        <Button
+        {/* <Button
           variant={"default"}
           className="absolute bottom-2 right-2 flex items-center gap-2 text-black"
         >
           <UploadCloud className="w-4 h-4" /> Upload new cover
-        </Button>
+        </Button> */}
 
         {/* Profile Picture */}
         <div className="absolute  -bottom-10 left-1/2 -translate-x-1/2 ">
@@ -96,7 +96,9 @@ function RouteComponent() {
                 <p className="text-sm text-muted-foreground">Phone number</p>
                 <p></p>
               </div>
-              <Button variant="outline">Change</Button>
+              <Button disabled variant="outline">
+                Change
+              </Button>
             </div>
 
             <div className="flex justify-between items-center">
@@ -104,7 +106,9 @@ function RouteComponent() {
                 <p className="text-sm text-muted-foreground">Address</p>
                 <p></p>
               </div>
-              <Button variant="outline">Change</Button>
+              <Button disabled variant="outline">
+                Change
+              </Button>
             </div>
 
             <div className="flex justify-between items-center">
@@ -112,7 +116,9 @@ function RouteComponent() {
                 <p className="text-sm text-muted-foreground">Date of birth</p>
                 <p></p>
               </div>
-              <Button variant="outline">Change</Button>
+              <Button disabled variant="outline">
+                Change
+              </Button>
             </div>
           </Card>
         </TabsContent>

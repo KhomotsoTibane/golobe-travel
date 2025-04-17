@@ -245,10 +245,10 @@ function HotelDetails() {
           </div>
         </div>
 
-        <div className="relative">
-          <div className="relative mt-4 grid grid-cols-12 gap-1.5 overflow-hidden rounded-xl">
+        <div className="relative max-h-[600px]">
+          <div className="relative mt-4 grid grid-cols-12 gap-1.5 overflow-hidden rounded-xl ">
             {/* Left large image */}
-            <div className="col-span-6">
+            <div className="col-span-6 overflow-hidden max-h-[600px]">
               <img
                 src={data.hotelAdditionalImageUrls[0].dynamic}
                 alt="Main"
@@ -257,7 +257,7 @@ function HotelDetails() {
             </div>
 
             {/* Right column (4 smaller images) */}
-            <div className="col-span-6 grid grid-cols-2 gap-1.5">
+            <div className="col-span-6 grid grid-cols-2 gap-1.5 max-h-[600px]">
               {data.hotelAdditionalImageUrls.slice(1, 5).map((img, i) => (
                 <div key={i} className="relative">
                   <img
@@ -378,7 +378,7 @@ function HotelDetails() {
                   <p className="montserrat__medium"> * {amenity}</p>
                 </div>
               ))}
-              {/* ✅ Add 'See All' button only in the right column */}
+
               {index === 1 && (
                 <div className="">
                   <button
