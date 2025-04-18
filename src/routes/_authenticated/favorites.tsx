@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
+import type { SearchResultsProps } from "@/types";
 
 export const Route = createFileRoute("/_authenticated/favorites")({
   component: RouteComponent,
@@ -51,7 +52,7 @@ function RouteComponent() {
               id="searchResultContainer"
               className=" flex h-full max-w-screen-md flex-col gap-8 items-center justify-center mx-auto"
             >
-              {data.map((result: any) => (
+              {data.map((result: SearchResultsProps) => (
                 <SearchHotelResultsCard
                   key={result.hotelId}
                   hotelId={result.hotelId}
@@ -68,6 +69,7 @@ function RouteComponent() {
                   totalAmenities={result.totalAmenities}
                   hotelCity={result.hotelCity}
                   hotelNation={result.hotelNation}
+                  isFavorite={result.isFavorite}
                 />
               ))}
             </div>
