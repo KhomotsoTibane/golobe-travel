@@ -5,6 +5,7 @@ import {
   Authenticator,
   Heading,
   Image,
+  PhoneNumberField,
   Radio,
   RadioGroupField,
   useAuthenticator,
@@ -119,6 +120,18 @@ const formFields = {
       placeholder: "john.doe@gmail.com",
       isRequired: true,
     },
+    phone_number: {
+      order: 4,
+      label: "Phone number",
+      placeholder: "071 224 8547",
+      isRequired: true,
+    },
+    birthdate: {
+      order: 4,
+      label: "Birthdate",
+      placeholder: "YYYY-MM-DD",
+      isRequired: true,
+    },
     password: {
       order: 5,
       label: "Password",
@@ -140,7 +153,12 @@ const RouteComponent = ({ children }: { children: React.ReactNode }) => {
     return (
       <div className="grid grid-cols-2 max-h-screen max-w-screen-2xl mx-auto">
         <div className=" col-span-1  h-screen flex items-center justify-center">
-          <Authenticator components={components} formFields={formFields} className="">
+          <Authenticator
+            components={components}
+            formFields={formFields}
+            className=""
+            signUpAttributes={["given_name", "family_name", "birthdate", "phone_number"]}
+          >
             {() => <>{children}</>}
           </Authenticator>
         </div>

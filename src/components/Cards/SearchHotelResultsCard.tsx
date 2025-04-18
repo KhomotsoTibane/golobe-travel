@@ -5,6 +5,7 @@ import { coffeeDark, heart, locationDark, salmonStar } from "@/assets/icons";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { client, userQueryOptions } from "@/lib/api";
 import { formatCurrency } from "@/lib/utils";
+import { Heart } from "lucide-react";
 
 const SearchHotelResultsCard = ({
   hotelId,
@@ -20,6 +21,7 @@ const SearchHotelResultsCard = ({
   hotelStreetAddress,
   totalAmenities,
   rateFrequency,
+  isFavorite,
 }: SearchResultsProps) => {
   const array = Array.from({ length: hotelStars }, (_, index) => index);
   const city = hotelCity || "";
@@ -37,10 +39,13 @@ const SearchHotelResultsCard = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-favorites", data?.cognitoInfo.userId!] });
+
+      queryClient.refetchQueries({
+        queryKey: ["hotel-results"],
+        exact: false,
+      });
     },
   });
-
-  console.log("result", data);
 
   return (
     <article className="card-shadow bg-white rounded-xl w-full mb-5">
@@ -48,10 +53,8 @@ const SearchHotelResultsCard = ({
         <div className="w-full h-48 relative rounded-t-xl overflow-hidden">
           <img
             src={hotelImageUrls}
-            width={900}
-            height={900}
             alt={"hotel image"}
-            className="size-full"
+            className="w-full h-[200px]  object-cover"
           />
         </div>
       </div>
@@ -103,7 +106,7 @@ const SearchHotelResultsCard = ({
             className="border-primary-400"
             onClick={() => toggleFavoriteMutation.mutate(hotelId)}
           >
-            <img src={heart} width={16} height={16} alt="heart-icon" />
+            <Heart className={`w-6 h-6 ${isFavorite ? "text-black fill-black border-none" : ""}`} />
           </Button>
 
           <Button asChild variant="default" className="montserrat__semibold text-black grow">

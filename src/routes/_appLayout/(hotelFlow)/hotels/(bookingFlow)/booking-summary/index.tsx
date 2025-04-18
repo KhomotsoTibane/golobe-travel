@@ -9,6 +9,9 @@ import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
 import { LoginSignupCard } from "@/components/Cards/LoginSignupCard";
 import type { SearchHotelDetailResultsProps } from "@/types";
+import { format as formatTz } from "date-fns-tz";
+import BookingConfirmation from "@/components/Modal/BookingConfirmedModal";
+import { useState } from "react";
 
 export const Route = createFileRoute(
   "/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/"
@@ -18,6 +21,8 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { selectedHotel } = useHotelStore();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const timeZone = "Africa/Johannesburg";
   const { checkin, checkout, rooms, adults, children } = useFilterStore();
   const { data: auth } = useQuery(userQueryOptions);
 
@@ -38,6 +43,24 @@ function RouteComponent() {
     hotelId,
   } = selectedHotel as SearchHotelDetailResultsProps;
 
+  console.log("checkin`1", checkin, "\ncheckout1", checkout);
+  function toZuluDateTime(date: Date, time: string, timeZone = "Africa/Johannesburg") {
+    // ⛳️ Split the time string — not the date!
+    const [hours, minutes] = time.split(":").map(Number);
+
+    // Copy date and apply time
+    const combined = new Date(date);
+    combined.setHours(hours);
+    combined.setMinutes(minutes);
+    combined.setSeconds(0);
+    combined.setMilliseconds(0);
+
+    // Format with timezone offset
+    return formatTz(combined, "yyyy-MM-dd'T'HH:mm:ssXXX", { timeZone });
+  }
+
+  const dateTimeCheckin1 = toZuluDateTime(checkin!, hotelCheckinTime!);
+  const dateTimeCheckout1 = toZuluDateTime(checkout!, hotelCheckoutTime!);
   const { data } = useQuery({
     queryKey: [
       "booking-summary-price",
@@ -50,15 +73,21 @@ function RouteComponent() {
     ],
     queryFn: async () =>
       client.getBookingTotalPrice({
-        checkin: checkin!,
-        checkout: checkout!,
+        checkin: new Date(dateTimeCheckin1),
+        checkout: new Date(dateTimeCheckout1),
         children: children!.toString(),
         adults: adults!.toString(),
         basePrice: hotelLowestPrice,
         rooms: rooms!.toString(),
+        checkinTime: hotelCheckinTime!,
+        checkoutTime: hotelCheckoutTime!,
       }),
   });
 
+  console.log("checkin2", checkin, "\ncheckout2", checkout);
+
+  const dateTimeCheckin = toZuluDateTime(checkin!, hotelCheckinTime!);
+  const dateTimeCheckout = toZuluDateTime(checkout!, hotelCheckoutTime!);
   const {
     mutate: confirmBooking,
     isPending,
@@ -69,16 +98,20 @@ function RouteComponent() {
       client.confirmBooking({
         userId: cognitoId,
         hotelId: hotelId,
-        checkin: checkin!,
-        checkout: checkout!,
+        checkin: dateTimeCheckin,
+        checkout: dateTimeCheckout,
         children: children!.toString(),
         adults: adults!.toString(),
         basePrice: hotelLowestPrice,
         rooms: rooms!,
         serviceFee: data?.serviceFee!,
         taxes: data?.taxes!,
+        checkinTime: hotelCheckinTime!,
+        checkoutTime: hotelCheckoutTime!,
       }),
     onSuccess: (response) => {
+      setIsOpen(true);
+
       console.log("confirmed!", response);
     },
     onError: (error) => {
@@ -87,7 +120,8 @@ function RouteComponent() {
   });
 
   return (
-    <section className="size-full mt-8 max-w-screen-2xl mx-auto">
+    <section className=" relative size-full mt-8 max-w-screen-2xl mx-auto">
+      <BookingConfirmation isOpen={isOpen} setIsOpen={setIsOpen} />;
       <div className="grid grid-cols-3 gap-10 ">
         <div className=" col-span-2 gap-4 flex flex-col ">
           <div className="card-shadow flex flex-col p-6 rounded-xl  max-h-80">

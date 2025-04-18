@@ -22,7 +22,7 @@ export const LoginSignupCard = ({ onConfirmBooking }: { onConfirmBooking: () => 
           <div className="space-y-1">
             <h5 className="font-semibold">Login or Sign up to book</h5>
           </div>
-          <Button variant={"default"}>Complete booking</Button>
+          <Button variant={"default"}>Continue to Login/Signup</Button>
         </>
       )}
     </Card>

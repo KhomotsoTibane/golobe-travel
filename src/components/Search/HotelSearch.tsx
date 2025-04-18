@@ -18,15 +18,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { format } from "date-fns";
+import { addDays, format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-
-import { bedDark, buildingDark, calendarDark, crossDark, personDark } from "@/assets/icons/index";
+import { buildingDark, calendarDark, personDark } from "@/assets/icons/index";
 import { useFilterStore } from "@/store/useFilterStore";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import { Navigate } from "@tanstack/react-router";
 
 const formSchema = z.object({
   location: z.string().min(2, {
@@ -47,26 +45,15 @@ const formSchema = z.object({
 const HotelSearch = ({ icon }: { icon: boolean }) => {
   const routerState = useRouterState();
   const navigate = useNavigate();
-  const {
-    rating,
-    rooms,
-    price,
-    amenities,
-    adults,
-    checkin,
-    checkout,
-    children,
-    location,
-    setFilters,
-  } = useFilterStore();
+  const { rooms, adults, checkin, checkout, children, location, setFilters } = useFilterStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      location: "",
+      location: location,
       guests: "1",
-      checkin: checkin,
-      checkout: checkout,
+      checkin: checkin ? new Date(checkin) : new Date(),
+      checkout: checkout ? new Date(checkout) : addDays(new Date(), 1),
       rooms: rooms !== undefined ? rooms.toString() : "1",
       adults: adults !== undefined ? adults.toString() : "2",
       children: children !== undefined ? children.toString() : "0",
@@ -121,7 +108,7 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
                 <FormLabel className="absolute left-3 bottom-8.5 bg-white px-2">
                   Destination
                 </FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={location}>
+                <Select {...field} onValueChange={field.onChange} defaultValue={location}>
                   <FormControl>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Pick destination" />
