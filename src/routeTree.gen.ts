@@ -11,18 +11,24 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AppLayoutImport } from './routes/_appLayout'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedFavoritesImport } from './routes/_authenticated/favorites'
-import { Route as AuthenticatedBookingImport } from './routes/_authenticated/booking'
 import { Route as AppLayouthotelFlowHotelsIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/index'
 import { Route as AppLayouthotelFlowHotelsSearchResultsCityIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/search-results/$city.index'
 import { Route as AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/index'
 import { Route as AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName.index'
 
 // Create/Update Routes
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthenticatedRoute = AuthenticatedImport.update({
   id: '/_authenticated',
@@ -49,12 +55,6 @@ const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
 const AuthenticatedFavoritesRoute = AuthenticatedFavoritesImport.update({
   id: '/favorites',
   path: '/favorites',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-
-const AuthenticatedBookingRoute = AuthenticatedBookingImport.update({
-  id: '/booking',
-  path: '/booking',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
@@ -111,12 +111,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
-    '/_authenticated/booking': {
-      id: '/_authenticated/booking'
-      path: '/booking'
-      fullPath: '/booking'
-      preLoaderRoute: typeof AuthenticatedBookingImport
-      parentRoute: typeof AuthenticatedImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
     }
     '/_authenticated/favorites': {
       id: '/_authenticated/favorites'
@@ -187,13 +187,11 @@ const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
 )
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedBookingRoute: typeof AuthenticatedBookingRoute
   AuthenticatedFavoritesRoute: typeof AuthenticatedFavoritesRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedBookingRoute: AuthenticatedBookingRoute,
   AuthenticatedFavoritesRoute: AuthenticatedFavoritesRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
 }
@@ -205,7 +203,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRouteWithChildren
-  '/booking': typeof AuthenticatedBookingRoute
+  '/login': typeof LoginRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
@@ -217,7 +215,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRouteWithChildren
-  '/booking': typeof AuthenticatedBookingRoute
+  '/login': typeof LoginRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
@@ -231,7 +229,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_appLayout': typeof AppLayoutRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteWithChildren
-  '/_authenticated/booking': typeof AuthenticatedBookingRoute
+  '/login': typeof LoginRoute
   '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_appLayout/(hotelFlow)/hotels/': typeof AppLayouthotelFlowHotelsIndexRoute
@@ -245,7 +243,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
-    | '/booking'
+    | '/login'
     | '/favorites'
     | '/profile'
     | '/hotels'
@@ -256,7 +254,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | ''
-    | '/booking'
+    | '/login'
     | '/favorites'
     | '/profile'
     | '/hotels'
@@ -268,7 +266,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_appLayout'
     | '/_authenticated'
-    | '/_authenticated/booking'
+    | '/login'
     | '/_authenticated/favorites'
     | '/_authenticated/profile'
     | '/_appLayout/(hotelFlow)/hotels/'
@@ -282,12 +280,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppLayoutRoute: typeof AppLayoutRouteWithChildren
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppLayoutRoute: AppLayoutRouteWithChildren,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 
 export const routeTree = rootRoute
@@ -302,7 +302,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/_appLayout",
-        "/_authenticated"
+        "/_authenticated",
+        "/login"
       ]
     },
     "/": {
@@ -320,14 +321,12 @@ export const routeTree = rootRoute
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
-        "/_authenticated/booking",
         "/_authenticated/favorites",
         "/_authenticated/profile"
       ]
     },
-    "/_authenticated/booking": {
-      "filePath": "_authenticated/booking.tsx",
-      "parent": "/_authenticated"
+    "/login": {
+      "filePath": "login.tsx"
     },
     "/_authenticated/favorites": {
       "filePath": "_authenticated/favorites.tsx",

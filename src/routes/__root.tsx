@@ -46,13 +46,9 @@ function Home() {
     Route.useSearch();
 
   const setFilters = useFilterStore((state) => state.setFilters);
-  // const match = useMatch({ from: `/_appLayout/(hotelFlow)/hotels/search-results/$city/` });
-  // console.log("matc city", match.params.city);
   const matches = useMatches();
   const isSearchResultsPage = useMatches().find((m) => m.routeId?.includes("search-results/$city"));
-
   const searchMatch = matches.find((m) => m.routeId?.includes("hotels/search-results"));
-
   const city = (searchMatch?.params as { city: string })?.city;
 
   useEffect(() => {
