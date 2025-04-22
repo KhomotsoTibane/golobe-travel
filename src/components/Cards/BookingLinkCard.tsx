@@ -36,10 +36,8 @@ const BookingLinkCard = ({
       {icon && (
         <div className="flex size-full flex-col justify-end bg-black/50 p-4">
           <div className="flex w-full flex-col items-center gap-2">
-            <h2 className="trade__bold text-white">{title}</h2>
-            <p className="montserrat__normal max-w-96 text-wrap text-center align-middle text-white">
-              {details}
-            </p>
+            <h3 className="font-trade__normal font-bold text-white">{title}</h3>
+            <p className="max-w-96 text-wrap text-center align-middle text-white">{details}</p>
             <Link to={link} className={`py-2 ${icon === true ? "" : "w-full"}`}>
               <Button variant={"outline"} className="w-full text-black">
                 {icon ? (
@@ -67,11 +65,11 @@ const BookingLinkCard = ({
           <div className="flex w-full flex-col items-center gap-2">
             <div className="flex w-full">
               <div className="flex w-full flex-col">
-                <h5 className="montserrat__semibold text-white">{title}</h5>
-                <p className="montserrat__normal small text-white">{details}</p>
+                <h5 className="font-semibold text-white">{title}</h5>
+                <p className="small text-white">{details}</p>
               </div>
               <div className="flex grow items-end  justify-end">
-                <h5 className="montserrat__semibold text-white">{price}</h5>
+                <h5 className="font-semibold text-white">{price}</h5>
               </div>
             </div>
             <Link to={link} className={`w-full py-2`}>

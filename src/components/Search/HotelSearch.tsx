@@ -97,7 +97,7 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex w-full  flex-col items-center justify-center gap-8  text-black"
+        className="flex w-full  flex-col gap-8  text-black "
       >
         <div className="flex sm:flex-col lg:flex-row w-full max-w-[1184px] gap-4 py-2">
           <FormField
@@ -255,7 +255,7 @@ const HotelSearch = ({ icon }: { icon: boolean }) => {
                                 value: rooms !== undefined ? rooms.toString() : "1",
                                 key: "rooms",
                                 min: 1,
-                                max: 30,
+                                max: 10,
                               },
                             ].map(({ label, value, key, min, max }) => (
                               <div key={label} className="grid grid-cols-3 items-center gap-4">

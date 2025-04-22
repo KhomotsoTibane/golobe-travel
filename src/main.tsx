@@ -9,6 +9,7 @@ import { routeTree } from "./routeTree.gen";
 import "./styles.css";
 import reportWebVitals from "./reportWebVitals.ts";
 import { Authenticator } from "@aws-amplify/ui-react";
+import NotFound from "./components/NotFound.tsx";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const router = createRouter({
   scrollRestoration: true,
   defaultStructuralSharing: true,
   defaultPreloadStaleTime: 0,
+  defaultNotFoundComponent: NotFound,
 });
 
 // Register the router instance for type safety

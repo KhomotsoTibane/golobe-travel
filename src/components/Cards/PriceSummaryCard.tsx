@@ -27,16 +27,15 @@ const PriceSummaryCard = ({
           />
 
           <div className="flex w-full flex-col gap-2 border-accent-600">
-            <p className="trade__bold">{hotelName}</p>
-            <p className="smallest montserrat__medium  text-black/75">Hotel Address</p>
+            <p className="font-trade__normal font-bold">{hotelName}</p>
+            <p className="smallest text-black/75">Hotel Address</p>
             <div className="flex items-center gap-1">
               <p className="flex size-8 items-center justify-center rounded-[4px] border border-primary-400 px-4">
                 {hotelReviewsScore}
               </p>
               <p className="smallest">
                 {" "}
-                <span className="montserrat__bold ">{hotelReviewsDesc}</span> {hotelReviewsTotal}{" "}
-                reviews
+                <span className="font-bold ">{hotelReviewsDesc}</span> {hotelReviewsTotal} reviews
               </p>
             </div>
           </div>
