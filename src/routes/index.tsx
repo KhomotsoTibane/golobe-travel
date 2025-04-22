@@ -34,12 +34,12 @@ function LandingPage() {
               transition={{ duration: 0.5 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="flex w-full flex-col items-center justify-center gap-4 h-full"
+              className="flex w-full flex-col items-center justify-center h-full"
             >
-              <h2 className="trade__normal text-white text-lg sm:text-xl md:text-2xl">
+              <h2 className="font-trade__normal text-white text-lg sm:text-xl md:text-2xl">
                 Helping You
               </h2>
-              <h1 className="trade__bold text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl uppercase">
+              <h1 className="font-trade__normal text-white uppercase tracking-wide">
                 Live & Travel
               </h1>
               <h6 className="text-white text-sm sm:text-base">Special offers tailored to you</h6>

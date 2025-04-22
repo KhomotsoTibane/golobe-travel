@@ -10,166 +10,165 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as LoginImport } from './routes/login'
-import { Route as AuthenticatedImport } from './routes/_authenticated'
-import { Route as AppLayoutImport } from './routes/_appLayout'
-import { Route as IndexImport } from './routes/index'
-import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
-import { Route as AuthenticatedFavoritesImport } from './routes/_authenticated/favorites'
-import { Route as AppLayouthotelFlowHotelsIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/index'
-import { Route as AppLayouthotelFlowHotelsSearchResultsCityIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/search-results/$city.index'
-import { Route as AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/index'
-import { Route as AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexImport } from './routes/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName.index'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as LoginImport } from "./routes/login";
+import { Route as AuthenticatedImport } from "./routes/_authenticated";
+import { Route as AppLayoutImport } from "./routes/_appLayout";
+import { Route as IndexImport } from "./routes/index";
+import { Route as AuthenticatedProfileImport } from "./routes/_authenticated/profile";
+import { Route as AuthenticatedFavoritesImport } from "./routes/_authenticated/favorites";
+import { Route as AppLayouthotelFlowHotelsIndexImport } from "./routes/_appLayout/(hotelFlow)/hotels/index";
+import { Route as AppLayouthotelFlowHotelsSearchResultsCityIndexImport } from "./routes/_appLayout/(hotelFlow)/hotels/search-results/$city.index";
+import { Route as AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexImport } from "./routes/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/index";
+import { Route as AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexImport } from "./routes/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName.index";
 
 // Create/Update Routes
 
 const LoginRoute = LoginImport.update({
-  id: '/login',
-  path: '/login',
+  id: "/login",
+  path: "/login",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const AuthenticatedRoute = AuthenticatedImport.update({
-  id: '/_authenticated',
+  id: "/_authenticated",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const AppLayoutRoute = AppLayoutImport.update({
-  id: '/_appLayout',
+  id: "/_appLayout",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
-  id: '/profile',
-  path: '/profile',
+  id: "/profile",
+  path: "/profile",
   getParentRoute: () => AuthenticatedRoute,
-} as any)
+} as any);
 
 const AuthenticatedFavoritesRoute = AuthenticatedFavoritesImport.update({
-  id: '/favorites',
-  path: '/favorites',
+  id: "/favorites",
+  path: "/favorites",
   getParentRoute: () => AuthenticatedRoute,
-} as any)
+} as any);
 
-const AppLayouthotelFlowHotelsIndexRoute =
-  AppLayouthotelFlowHotelsIndexImport.update({
-    id: '/(hotelFlow)/hotels/',
-    path: '/hotels/',
-    getParentRoute: () => AppLayoutRoute,
-  } as any)
+const AppLayouthotelFlowHotelsIndexRoute = AppLayouthotelFlowHotelsIndexImport.update({
+  id: "/(hotelFlow)/hotels/",
+  path: "/hotels/",
+  getParentRoute: () => AppLayoutRoute,
+} as any);
 
 const AppLayouthotelFlowHotelsSearchResultsCityIndexRoute =
   AppLayouthotelFlowHotelsSearchResultsCityIndexImport.update({
-    id: '/(hotelFlow)/hotels/search-results/$city/',
-    path: '/hotels/search-results/$city/',
+    id: "/(hotelFlow)/hotels/search-results/$city/",
+    path: "/hotels/search-results/$city/",
     getParentRoute: () => AppLayoutRoute,
-  } as any)
+  } as any);
 
 const AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute =
   AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexImport.update({
-    id: '/(hotelFlow)/hotels/(bookingFlow)/booking-summary/',
-    path: '/hotels/booking-summary/',
+    id: "/(hotelFlow)/hotels/(bookingFlow)/booking-summary/",
+    path: "/hotels/booking-summary/",
     getParentRoute: () => AppLayoutRoute,
-  } as any)
+  } as any);
 
 const AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute =
   AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexImport.update({
-    id: '/(hotelFlow)/hotels/search-results/$city/$hotelName/',
-    path: '/hotels/search-results/$city/$hotelName/',
+    id: "/(hotelFlow)/hotels/search-results/$city/$hotelName/",
+    path: "/hotels/search-results/$city/$hotelName/",
     getParentRoute: () => AppLayoutRoute,
-  } as any)
+  } as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/_appLayout': {
-      id: '/_appLayout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AppLayoutImport
-      parentRoute: typeof rootRoute
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthenticatedImport
-      parentRoute: typeof rootRoute
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/_authenticated/favorites': {
-      id: '/_authenticated/favorites'
-      path: '/favorites'
-      fullPath: '/favorites'
-      preLoaderRoute: typeof AuthenticatedFavoritesImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/profile': {
-      id: '/_authenticated/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthenticatedProfileImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_appLayout/(hotelFlow)/hotels/': {
-      id: '/_appLayout/(hotelFlow)/hotels/'
-      path: '/hotels'
-      fullPath: '/hotels'
-      preLoaderRoute: typeof AppLayouthotelFlowHotelsIndexImport
-      parentRoute: typeof AppLayoutImport
-    }
-    '/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/': {
-      id: '/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/'
-      path: '/hotels/booking-summary'
-      fullPath: '/hotels/booking-summary'
-      preLoaderRoute: typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexImport
-      parentRoute: typeof AppLayoutImport
-    }
-    '/_appLayout/(hotelFlow)/hotels/search-results/$city/': {
-      id: '/_appLayout/(hotelFlow)/hotels/search-results/$city/'
-      path: '/hotels/search-results/$city'
-      fullPath: '/hotels/search-results/$city'
-      preLoaderRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityIndexImport
-      parentRoute: typeof AppLayoutImport
-    }
-    '/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/': {
-      id: '/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/'
-      path: '/hotels/search-results/$city/$hotelName'
-      fullPath: '/hotels/search-results/$city/$hotelName'
-      preLoaderRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexImport
-      parentRoute: typeof AppLayoutImport
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/_appLayout": {
+      id: "/_appLayout";
+      path: "";
+      fullPath: "";
+      preLoaderRoute: typeof AppLayoutImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/_authenticated": {
+      id: "/_authenticated";
+      path: "";
+      fullPath: "";
+      preLoaderRoute: typeof AuthenticatedImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/login": {
+      id: "/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof LoginImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/_authenticated/favorites": {
+      id: "/_authenticated/favorites";
+      path: "/favorites";
+      fullPath: "/favorites";
+      preLoaderRoute: typeof AuthenticatedFavoritesImport;
+      parentRoute: typeof AuthenticatedImport;
+    };
+    "/_authenticated/profile": {
+      id: "/_authenticated/profile";
+      path: "/profile";
+      fullPath: "/profile";
+      preLoaderRoute: typeof AuthenticatedProfileImport;
+      parentRoute: typeof AuthenticatedImport;
+    };
+    "/_appLayout/(hotelFlow)/hotels/": {
+      id: "/_appLayout/(hotelFlow)/hotels/";
+      path: "/hotels";
+      fullPath: "/hotels";
+      preLoaderRoute: typeof AppLayouthotelFlowHotelsIndexImport;
+      parentRoute: typeof AppLayoutImport;
+    };
+    "/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/": {
+      id: "/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/";
+      path: "/hotels/booking-summary";
+      fullPath: "/hotels/booking-summary";
+      preLoaderRoute: typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexImport;
+      parentRoute: typeof AppLayoutImport;
+    };
+    "/_appLayout/(hotelFlow)/hotels/search-results/$city/": {
+      id: "/_appLayout/(hotelFlow)/hotels/search-results/$city/";
+      path: "/hotels/search-results/$city";
+      fullPath: "/hotels/search-results/$city";
+      preLoaderRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityIndexImport;
+      parentRoute: typeof AppLayoutImport;
+    };
+    "/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/": {
+      id: "/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/";
+      path: "/hotels/search-results/$city/$hotelName";
+      fullPath: "/hotels/search-results/$city/$hotelName";
+      preLoaderRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexImport;
+      parentRoute: typeof AppLayoutImport;
+    };
   }
 }
 
 // Create and export the route tree
 
 interface AppLayoutRouteChildren {
-  AppLayouthotelFlowHotelsIndexRoute: typeof AppLayouthotelFlowHotelsIndexRoute
-  AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute: typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute
-  AppLayouthotelFlowHotelsSearchResultsCityIndexRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
-  AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
+  AppLayouthotelFlowHotelsIndexRoute: typeof AppLayouthotelFlowHotelsIndexRoute;
+  AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute: typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute;
+  AppLayouthotelFlowHotelsSearchResultsCityIndexRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute;
+  AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute: typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute;
 }
 
 const AppLayoutRouteChildren: AppLayoutRouteChildren = {
@@ -180,107 +179,105 @@ const AppLayoutRouteChildren: AppLayoutRouteChildren = {
     AppLayouthotelFlowHotelsSearchResultsCityIndexRoute,
   AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute:
     AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute,
-}
+};
 
-const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
-  AppLayoutRouteChildren,
-)
+const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(AppLayoutRouteChildren);
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedFavoritesRoute: typeof AuthenticatedFavoritesRoute
-  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedFavoritesRoute: typeof AuthenticatedFavoritesRoute;
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute;
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedFavoritesRoute: AuthenticatedFavoritesRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
-}
+};
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
-  AuthenticatedRouteChildren,
-)
+  AuthenticatedRouteChildren
+);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '': typeof AuthenticatedRouteWithChildren
-  '/login': typeof LoginRoute
-  '/favorites': typeof AuthenticatedFavoritesRoute
-  '/profile': typeof AuthenticatedProfileRoute
-  '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
-  '/hotels/booking-summary': typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute
-  '/hotels/search-results/$city': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
-  '/hotels/search-results/$city/$hotelName': typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
+  "/": typeof IndexRoute;
+  "": typeof AuthenticatedRouteWithChildren;
+  "/login": typeof LoginRoute;
+  "/favorites": typeof AuthenticatedFavoritesRoute;
+  "/profile": typeof AuthenticatedProfileRoute;
+  "/hotels": typeof AppLayouthotelFlowHotelsIndexRoute;
+  "/hotels/booking-summary": typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute;
+  "/hotels/search-results/$city": typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute;
+  "/hotels/search-results/$city/$hotelName": typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '': typeof AuthenticatedRouteWithChildren
-  '/login': typeof LoginRoute
-  '/favorites': typeof AuthenticatedFavoritesRoute
-  '/profile': typeof AuthenticatedProfileRoute
-  '/hotels': typeof AppLayouthotelFlowHotelsIndexRoute
-  '/hotels/booking-summary': typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute
-  '/hotels/search-results/$city': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
-  '/hotels/search-results/$city/$hotelName': typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
+  "/": typeof IndexRoute;
+  "": typeof AuthenticatedRouteWithChildren;
+  "/login": typeof LoginRoute;
+  "/favorites": typeof AuthenticatedFavoritesRoute;
+  "/profile": typeof AuthenticatedProfileRoute;
+  "/hotels": typeof AppLayouthotelFlowHotelsIndexRoute;
+  "/hotels/booking-summary": typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute;
+  "/hotels/search-results/$city": typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute;
+  "/hotels/search-results/$city/$hotelName": typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/_appLayout': typeof AppLayoutRouteWithChildren
-  '/_authenticated': typeof AuthenticatedRouteWithChildren
-  '/login': typeof LoginRoute
-  '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
-  '/_authenticated/profile': typeof AuthenticatedProfileRoute
-  '/_appLayout/(hotelFlow)/hotels/': typeof AppLayouthotelFlowHotelsIndexRoute
-  '/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/': typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute
-  '/_appLayout/(hotelFlow)/hotels/search-results/$city/': typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute
-  '/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/': typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute
+  __root__: typeof rootRoute;
+  "/": typeof IndexRoute;
+  "/_appLayout": typeof AppLayoutRouteWithChildren;
+  "/_authenticated": typeof AuthenticatedRouteWithChildren;
+  "/login": typeof LoginRoute;
+  "/_authenticated/favorites": typeof AuthenticatedFavoritesRoute;
+  "/_authenticated/profile": typeof AuthenticatedProfileRoute;
+  "/_appLayout/(hotelFlow)/hotels/": typeof AppLayouthotelFlowHotelsIndexRoute;
+  "/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/": typeof AppLayouthotelFlowHotelsbookingFlowBookingSummaryIndexRoute;
+  "/_appLayout/(hotelFlow)/hotels/search-results/$city/": typeof AppLayouthotelFlowHotelsSearchResultsCityIndexRoute;
+  "/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/": typeof AppLayouthotelFlowHotelsSearchResultsCityHotelNameIndexRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | ''
-    | '/login'
-    | '/favorites'
-    | '/profile'
-    | '/hotels'
-    | '/hotels/booking-summary'
-    | '/hotels/search-results/$city'
-    | '/hotels/search-results/$city/$hotelName'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | ""
+    | "/login"
+    | "/favorites"
+    | "/profile"
+    | "/hotels"
+    | "/hotels/booking-summary"
+    | "/hotels/search-results/$city"
+    | "/hotels/search-results/$city/$hotelName";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | ''
-    | '/login'
-    | '/favorites'
-    | '/profile'
-    | '/hotels'
-    | '/hotels/booking-summary'
-    | '/hotels/search-results/$city'
-    | '/hotels/search-results/$city/$hotelName'
+    | "/"
+    | ""
+    | "/login"
+    | "/favorites"
+    | "/profile"
+    | "/hotels"
+    | "/hotels/booking-summary"
+    | "/hotels/search-results/$city"
+    | "/hotels/search-results/$city/$hotelName";
   id:
-    | '__root__'
-    | '/'
-    | '/_appLayout'
-    | '/_authenticated'
-    | '/login'
-    | '/_authenticated/favorites'
-    | '/_authenticated/profile'
-    | '/_appLayout/(hotelFlow)/hotels/'
-    | '/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/'
-    | '/_appLayout/(hotelFlow)/hotels/search-results/$city/'
-    | '/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/_appLayout"
+    | "/_authenticated"
+    | "/login"
+    | "/_authenticated/favorites"
+    | "/_authenticated/profile"
+    | "/_appLayout/(hotelFlow)/hotels/"
+    | "/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/"
+    | "/_appLayout/(hotelFlow)/hotels/search-results/$city/"
+    | "/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/";
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AppLayoutRoute: typeof AppLayoutRouteWithChildren
-  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
-  LoginRoute: typeof LoginRoute
+  IndexRoute: typeof IndexRoute;
+  AppLayoutRoute: typeof AppLayoutRouteWithChildren;
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren;
+  LoginRoute: typeof LoginRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -288,11 +285,11 @@ const rootRouteChildren: RootRouteChildren = {
   AppLayoutRoute: AppLayoutRouteWithChildren,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
-}
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {

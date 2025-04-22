@@ -120,8 +120,8 @@ function RouteComponent() {
   });
 
   return (
-    <section className=" relative size-full mt-8 max-w-screen-2xl mx-auto">
-      <BookingConfirmation isOpen={isOpen} setIsOpen={setIsOpen} />;
+    <section className=" relative size-full mt-24 max-w-screen-2xl mx-auto">
+      <BookingConfirmation isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="grid grid-cols-3 gap-10 ">
         <div className=" col-span-2 gap-4 flex flex-col ">
           <div className="card-shadow flex flex-col p-6 rounded-xl  max-h-80">
@@ -140,7 +140,7 @@ function RouteComponent() {
 
             <div>
               <div className="montserrat__medium flex flex-col gap-3 rounded-xl p-4 border border-primary-200 shadow-md items-center justify-center">
-                <h6 className="trade__bold">{hotelName}</h6>
+                <h6 className="font-trade__normal font-semibold">{hotelName}</h6>
                 <div className="flex gap-px">
                   <img src={locationDark} width={16} height={16} alt="coffee icon" />
                   <p className="smallest montserrat__medium  text-black/75">

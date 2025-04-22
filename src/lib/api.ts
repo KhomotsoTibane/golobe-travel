@@ -23,11 +23,14 @@ async function fetchCurrentUser() {
     const user = await getCurrentUser();
     const session = await fetchAuthSession();
 
+    console.log("sesh", session);
+
     const email = session.tokens?.idToken?.payload.email;
-    const { idToken } = session.tokens ?? {};
+    const { accessToken } = session.tokens ?? {};
 
     let res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/${user.userId}`);
     let userDetails = res.ok ? await res.json() : null;
+    const idToken = accessToken;
 
     if (!userDetails && res.status === 404) {
       const attributes = await fetchUserAttributes();

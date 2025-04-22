@@ -24,6 +24,7 @@ import { ImageCarousel } from "@/components/Carousel/ImageCarousel";
 import { useHotelStore } from "@/store/useHotelDetailsStore";
 import { formatCurrency } from "@/lib/utils";
 import { Heart } from "lucide-react";
+import MapDetails from "@/components/Map/MapDetails";
 
 export const Route = createFileRoute(
   "/_appLayout/(hotelFlow)/hotels/search-results/$city/$hotelName/"
@@ -150,7 +151,7 @@ function HotelDetails() {
   const rightColumn = previewAmenities.slice(midIndex);
 
   return (
-    <div className="size-full mt-8 max-w-screen-2xl mx-auto">
+    <div className="size-full mt-24 max-w-screen-2xl mx-auto">
       <div className="">
         <Breadcrumb>
           <BreadcrumbList>
@@ -184,7 +185,7 @@ function HotelDetails() {
       <div className="mt-8 h-full gap-6">
         <div className="flex w-full justify-between gap-8">
           <div className="flex items-center justify-center gap-8">
-            <h6 className="trade__bold">{data.hotelName}</h6>
+            <h6 className="font-semibold">{data.hotelName}</h6>
             <div className="flex items-center justify-center">
               {array.map((star) => (
                 <img
@@ -282,7 +283,7 @@ function HotelDetails() {
           </div>
 
           {isCarouselOpen && (
-            <div className="absolute inset-0 z-40 my-x bg-black/90 rounded-xl overflow-hidden flex items-center justify-center border-2 border-accent-900">
+            <div className="absolute inset-0 z-40 my-x bg-black/90 rounded-xl overflow-hidden flex items-center justify-center">
               <button
                 onClick={() => setIsCarouselOpen(false)}
                 className="absolute top-4 right-4 text-white text-2xl z-50"
@@ -302,7 +303,7 @@ function HotelDetails() {
           </div>
           <div className="my-8 flex gap-4">
             <div className="flex h-36 w-40 flex-col items-start gap-4 rounded-xl bg-primary-400 p-4">
-              <h4 className="trade__bold">{4.5}</h4>
+              <h4 className="font-trade__normal font-bold">{4.5}</h4>
               <div>
                 <p className="montserrat__bold flex flex-col">{data.hotelReviewsDesc}</p>
                 <small className="small montserrat__medium">{data.hotelReviewsTotal} reviews</small>
@@ -323,7 +324,7 @@ function HotelDetails() {
         <hr className="my-16 h-1" />
 
         <div className="">
-          <h6 className="trade__bold mb-8">Available Rooms</h6>
+          <h6 className="font-trade__normal font-bold mb-8">Available Rooms</h6>
 
           {rooms.map((room) => (
             <>
@@ -358,8 +359,8 @@ function HotelDetails() {
         <hr className="my-16 h-1" />
 
         <div>
-          <p>Location/Map</p>
-          {/* <MapDetails properties={data} error={error} /> */}
+          <p className="font-trade__normal font-semibold">Location/Map</p>
+          <MapDetails properties={data} error={error} />
           <div className="flex gap-px">
             <img src={locationDark} width={16} height={16} alt="coffee icon" />
             <p className="smallest montserrat__medium  text-black/75">
@@ -397,7 +398,7 @@ function HotelDetails() {
         <div>
           <h5 className="trade__medium">Reviews</h5>
           <div className="flex h-16 w-60 items-center gap-4 py-4">
-            <h2 className="trade__bold">{data.hotelReviewsScore}</h2>
+            <h2 className="font-trade__normal font-bold">{data.hotelReviewsScore}</h2>
             <div className="flex flex-col">
               <p className="montserrat__bold flex flex-col">{data.hotelReviewsDesc}</p>
               <small className="smallest montserrat__normal">

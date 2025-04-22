@@ -4,9 +4,13 @@ import { StaysHero } from "@/assets/images";
 import BookingLinkCard from "@/components/Cards/BookingLinkCard";
 import { motion } from "framer-motion";
 import SearchTab from "@/components/Search/SearchTab";
+import NotFound from "@/components/NotFound";
 
 export const Route = createFileRoute("/_appLayout/(hotelFlow)/hotels/")({
   component: HotelLandingPage,
+  notFoundComponent: () => {
+    return <p>This setting page doesn't exist!</p>;
+  },
 });
 
 function HotelLandingPage() {
@@ -26,9 +30,9 @@ function HotelLandingPage() {
               transition={{ duration: 0.5 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="justify-center items-center lg:justify-start lg:items-start lg:text-left z-20 mt-20 flex flex-col gap-8 max-w-screen-xl"
+              className="absolute justify-center flex flex-col inset-0 gap-2 max-w-[440px] px-16 text-left"
             >
-              <h2 className="trade__normal text-white text-lg sm:text-xl md:text-2xl">
+              <h2 className="font-trade__normal text-white leading-16">
                 Make your travel wishlist, we'll do the rest
               </h2>
 
@@ -44,9 +48,9 @@ function HotelLandingPage() {
       {/* <HotelCTA /> */}
       <div className="mt-20 flex w-full flex-col max-w-screen-2xl mx-auto">
         <div className="flex gap-6">
-          <div className="flex w-full px-20 lg:px-0 flex-col gap-4 text-wrap">
+          <div className="flex w-full px-4 md:px-20 lg:px-0 flex-col gap-4 text-wrap">
             <h4 className="montserrat__bold">Plan your perfect trip</h4>
-            <p className="montserrat__normal text-black text-left text-wrap">
+            <p className="montserrat__normal text-black md:text-left text-wrap">
               Going somewhere to celebrate this season? Whether you’re going home or somewhere to
               roam, we’ve got the travel tools to get you to your destination.
             </p>
