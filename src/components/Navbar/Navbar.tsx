@@ -1,9 +1,15 @@
 import { NavbarLinks } from "@/constants";
 import Logo from "@/assets/images/logo.png";
 import { Button } from "../ui/button";
-import { Link, useRouterState } from "@tanstack/react-router";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useRouteContext,
+  useRouterState,
+} from "@tanstack/react-router";
 import { userQueryOptions } from "@/lib/api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Heart } from "lucide-react";
 import {
   DropdownMenu,
@@ -21,15 +27,34 @@ interface NavProps {
 }
 
 const Navbar = ({ textWhite }: NavProps) => {
+  function toQueryString(search: Record<string, any>) {
+    const params = new URLSearchParams();
+    for (const key in search) {
+      const value = search[key];
+      if (Array.isArray(value)) {
+        value.forEach((v) => params.append(key, v));
+      } else if (value !== undefined) {
+        params.set(key, value);
+      }
+    }
+    return params.toString() ? `?${params.toString()}` : "";
+  }
   const { data } = useQuery(userQueryOptions);
-  console.log("user", data);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const pathname = useRouterState({
-    select: (state) => state.location.pathname,
+    select: (state) => `${state.location.pathname}${toQueryString(state.location.search)}`,
   });
+  console.log("data", data);
 
-  console.log("path", pathname);
   const handleLogout = async () => {
+    sessionStorage.setItem("returnAfterLogout", location.pathname);
     await signOut();
+    const returnTo = sessionStorage.getItem("returnAfterLogout") || "/";
+    sessionStorage.removeItem("returnAfterLogout");
+    queryClient.invalidateQueries({ queryKey: ["get-current-user"] });
+    navigate({ to: returnTo });
   };
   return (
     <div className="relative h-20 card-shadow w-screen">
@@ -66,7 +91,9 @@ const Navbar = ({ textWhite }: NavProps) => {
             })}
           </div>
           <div className="col-span-1 flex items-center justify-center">
-            <img src={Logo} width={100} height={100} alt="logo" className="col-span-1" />
+            <Link to="/">
+              <img src={Logo} width={100} height={100} alt="logo" className="col-span-1" />
+            </Link>
           </div>
 
           <div className="flex justify-end items-center gap-5">
@@ -120,10 +147,14 @@ const Navbar = ({ textWhite }: NavProps) => {
             ) : (
               <>
                 <Button asChild variant="link">
-                  <Link to="/profile">Login</Link>
+                  <Link to={`/login`} onClick={() => sessionStorage.setItem("returnTo", pathname)}>
+                    Login
+                  </Link>
                 </Button>
                 <Button asChild variant="link" className="bg-white text-black">
-                  <Link to="/profile">Sign up</Link>
+                  <Link to={`/login`} onClick={() => sessionStorage.setItem("returnTo", pathname)}>
+                    Sign up
+                  </Link>
                 </Button>
               </>
             )}

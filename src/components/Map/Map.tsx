@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import type { SearchResultsProps } from "@/types";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
 
@@ -19,7 +20,13 @@ const Map = ({ properties, error, isFetching, isFetchingNextPage, status, entity
     const map = new mapboxgl.Map({
       container: mapContainerRef.current!,
       style: "mapbox://styles/jledoza/cm8oqi7h4005701s70htn6sl9",
-      center: entity ? [entity.lng, entity.lat] : [30.207138411, -25.8638909153],
+      // center: entity ? [entity.lng, entity.lat] : [30.207138411, -25.8638909153],
+      center:
+        properties && properties?.[0]?.hotelLongitude
+          ? [properties[0].hotelLongitude, properties[0].hotelLatitude]
+          : entity?.lat && entity?.lng
+            ? [entity.lng, entity.lat]
+            : [30.207138411, -25.8638909153],
       zoom: 9,
     });
 

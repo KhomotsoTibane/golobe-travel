@@ -1,5 +1,5 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import React from "react";
+import { createFileRoute, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
+import React, { useEffect } from "react";
 import { Amplify } from "aws-amplify";
 import {
   Authenticator,
@@ -26,7 +26,7 @@ Amplify.configure({
   },
 });
 
-const components = {
+export const components = {
   Header() {
     return (
       <View className="mb-6">
@@ -88,7 +88,7 @@ const components = {
   },
 };
 
-const formFields = {
+export const formFields = {
   signIn: {
     username: {
       label: "Email",
@@ -149,7 +149,19 @@ const formFields = {
 
 const RouteComponent = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuthenticator((context) => [context.user]);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      const returnTo = sessionStorage.getItem("returnToAuthRoute") || "/";
+      sessionStorage.removeItem("returnToAuthRoute");
+      navigate({ to: returnTo });
+    }
+  }, [user]);
+
   if (!user) {
+    sessionStorage.setItem("returnToAuthRoute", location.pathname);
     return (
       <div className="grid grid-cols-2 max-h-screen max-w-screen-2xl mx-auto">
         <div className=" col-span-1  h-screen flex items-center justify-center">
@@ -175,14 +187,16 @@ const RouteComponent = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
+  if (user) {
+    console.log("user here");
+  }
+
   return (
     <>
-      {/* <Navbar /> */}
       <main className="relative">
         <div className="my-30 px-20">
           <Outlet />
         </div>
-        {/* <Footer /> */}
       </main>
     </>
   );
