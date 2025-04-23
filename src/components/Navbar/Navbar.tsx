@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { signOut } from "aws-amplify/auth";
 import { cn } from "@/lib/utils";
 
@@ -61,7 +62,12 @@ const Navbar = ({ textWhite }: NavProps) => {
 
   return (
     <div className="fixed top-0 left-0 z-50 w-full card-shadow bg-white">
+    <div className="fixed top-0 left-0 z-50 w-full card-shadow bg-white">
       <nav
+        className={cn(
+          "mx-auto flex items-center justify-between max-w-screen-2xl px-4 py-4",
+          textWhite ? "bg-transparent text-white" : "bg-white"
+        )}
         className={cn(
           "mx-auto flex items-center justify-between max-w-screen-2xl px-4 py-4",
           textWhite ? "bg-transparent text-white" : "bg-white"
@@ -183,6 +189,7 @@ const Navbar = ({ textWhite }: NavProps) => {
             )}
           </div>
         </div>
+      )}
       )}
     </div>
   );
