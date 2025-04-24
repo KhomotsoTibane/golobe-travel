@@ -16,6 +16,7 @@ import { userQueryOptions } from "@/lib/api";
 
 import Logo from "@/assets/images/logo.png";
 import { Baku } from "@/assets/images";
+import Footer from "@/components/Footer/Footer";
 
 Amplify.configure({
   Auth: {
@@ -154,9 +155,9 @@ const RouteComponent = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (user) {
-      const returnTo = sessionStorage.getItem("returnToAuthRoute") || "/";
-      sessionStorage.removeItem("returnToAuthRoute");
-      navigate({ to: returnTo });
+      const returnTo = sessionStorage.getItem("returnToAuthRoute");
+      //sessionStorage.removeItem("returnToAuthRoute");
+      navigate({ to: returnTo ?? "/" });
     }
   }, [user]);
 
@@ -187,16 +188,13 @@ const RouteComponent = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  if (user) {
-    console.log("user here");
-  }
-
   return (
     <>
       <main className="relative">
-        <div className="my-30 px-20">
+        <div className="my-30 px-20 flex-1">
           <Outlet />
         </div>
+        <Footer />
       </main>
     </>
   );

@@ -5,6 +5,10 @@ import { Card } from "@/components/ui/card";
 import { Pencil, UploadCloud } from "lucide-react";
 
 import { AccountBg } from "@/assets/images";
+import { useQuery } from "@tanstack/react-query";
+import { client } from "@/lib/api";
+import type { HotelBookingCardData } from "@/types";
+import HotelBookingCard from "@/components/Cards/HotelBookingCard";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: RouteComponent,
@@ -13,10 +17,25 @@ export const Route = createFileRoute("/_authenticated/profile")({
 function RouteComponent() {
   const { queryClient, user } = useRouteContext({ from: "/_authenticated" });
 
-  const name = user?.userDetails.name;
+  const name = user?.userDetails.fullName;
   const email = user?.userDetails.email;
+  const userId = user?.cognitoInfo.userId;
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["user-bookings", user],
+    queryFn: async () => client.getUserBookings({ id: userId! }),
+    enabled: !!user?.cognitoInfo.userId,
+  });
+
+  if (error) console.error("Error loading bookings", error);
+  if (isLoading) console.log("Loading bookings...");
+
+  if (isLoading) {
+    return <div>Loading your bookings...</div>;
+  }
+
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-4 border">
+    <div className="max-w-4xl mx-auto mt-10 p-4">
       {/* Cover Image */}
       <div
         className="relative h-48 w-full rounded-xl  border border-accent-300"
@@ -125,7 +144,21 @@ function RouteComponent() {
 
         <TabsContent value="history">
           <Card className="p-6 mt-6 text-sm text-muted-foreground bg-white border-none">
-            Booking and travel history goes here.
+            <div className="">
+              <div
+                id="searchResultContainer"
+                className=" flex h-full flex-col gap-8 items-center justify-center mx-auto"
+              >
+                {data.map((result: HotelBookingCardData) => (
+                  <HotelBookingCard
+                    checkInDate={result.checkinDate}
+                    checkOutDate={result.checkoutDate}
+                    roomNumber="On arrival"
+                    hotelLogo={result.hotelImageUrls[0]}
+                  />
+                ))}
+              </div>
+            </div>
           </Card>
         </TabsContent>
 

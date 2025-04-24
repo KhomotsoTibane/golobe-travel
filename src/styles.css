@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -69,7 +71,8 @@
   --color-danger-custom: #811d1d;
   --color-gray: #79747e;
 
-  --font-trade__normal: "TradeGothic", "sans-serif";
+  --font-trade__normal: "TradeGothic", sans-serif;
+  --font-montserrat: "Montserrat", sans-serif;
 
 }
 
@@ -142,7 +145,7 @@
   font-family: "TradeGothic";
   src: url("@/assets/fonts/trade-gothic.otf") format("opentype");
   src: url("@/assets/fonts/trade-gothic-bold.otf") format("opentype");
-  font-weight: normal;
+  font-weight: 200 700;
   font-style: normal;
 }
 
@@ -198,7 +201,7 @@ body {
   font-family: "Montserrat", sans-serif;
   max-width: 100dvw;
   scrollbar-width: none;
-  
+
 }
 
 .dark-gradient {
@@ -222,7 +225,7 @@ body {
 }
 
 h1 {
-  font-size: 3.815rem; /* 61.04px */
+  font-size: 5rem; /* 80px */
 }
 
 h2 {
@@ -320,6 +323,20 @@ p {
   scrollbar-width: none;     /* Firefox */
   overflow: auto;            /* Ensures scrolling is still functional */
 }
+
+#searchResultContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+#searchResultContainer::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary-500);
+  border-radius: 10px;
+}
+
+#scrolsearchResultContainerlArea::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
 
 
 /* Amplify UI Overrides */

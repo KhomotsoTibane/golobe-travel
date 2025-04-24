@@ -38,7 +38,9 @@ const SearchHotelResultsCard = ({
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-favorites", data?.cognitoInfo.userId!] });
+      queryClient.invalidateQueries({
+        queryKey: ["toggle-user-favorites", data?.cognitoInfo.userId!],
+      });
 
       queryClient.refetchQueries({
         queryKey: ["hotel-results"],
@@ -59,7 +61,7 @@ const SearchHotelResultsCard = ({
         </div>
       </div>
       <div className="p-4">
-        <h6 className="trade__bold">{hotelName}</h6>
+        <h6 className="font-semibold">{hotelName}</h6>
         <div className="flex gap-px">
           <img src={locationDark} width={16} height={16} alt="coffee icon" />
           <p className="smallest montserrat__medium  text-black/75">

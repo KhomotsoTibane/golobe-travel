@@ -240,3 +240,11 @@ export type SocialLinks = {
   name: string;
   imageUrl: string;
 };
+
+export type HotelBookingCardData = {
+  hotelId: string;
+  hotelName?: string;
+  hotelImageUrls: string[];
+  checkinDate: string;
+  checkoutDate: string;
+};

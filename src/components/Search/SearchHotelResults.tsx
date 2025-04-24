@@ -17,41 +17,43 @@ const SearchHotelResults = ({
 }: SearchHotelResultsProps) => {
   if (!searchResults) return <div>No results found</div>;
   return (
-    <div className="h-full">
-      <div id="searchResultContainer" className=" flex h-full flex-col gap-8 overflow-y-auto">
-        {searchResults.map((result) => (
-          <SearchHotelResultsCard
-            key={result.hotelId}
-            hotelId={result.hotelId}
-            hotelImageUrls={result.hotelImageUrls[0]}
-            hotelLowestPrice={result.hotelLowestPrice}
-            rateFrequency={"per night"}
-            hotelReviewsTotal={result.hotelReviewsTotal}
-            hotelReviewsScore={result.hotelReviewsScore}
-            hotelStreetAddress={result.hotelStreetAddress}
-            hotelName={result.hotelName}
-            hotelStars={result.hotelStars}
-            hotelAmenities={result.hotelAmenities}
-            hotelReviewsDesc={result.hotelReviewsDesc}
-            totalAmenities={result.totalAmenities}
-            hotelCity={result.hotelCity}
-            hotelNation={result.hotelNation}
-            isFavorite={result.isFavorite}
-          />
-        ))}
-        {hasNextPage ? (
-          <Button
-            variant={"default"}
-            size={"lg"}
-            className="w-full bg-black"
-            onClick={() => fetchNextPage()}
-          >
-            {isFetchingNextPage ? "Loading more..." : "Show more results"}
-          </Button>
-        ) : (
-          <p>End of results</p>
-        )}
-      </div>
+    <div
+      id="searchResultContainer"
+      className="h-[60dvh] md:h-[80dvh] overflow-y-auto px-4 flex flex-col gap-8"
+    >
+      {searchResults.map((result) => (
+        <SearchHotelResultsCard
+          key={result.hotelId}
+          hotelId={result.hotelId}
+          hotelImageUrls={result.hotelImageUrls[0]}
+          hotelLowestPrice={result.hotelLowestPrice}
+          rateFrequency={"per night"}
+          hotelReviewsTotal={result.hotelReviewsTotal}
+          hotelReviewsScore={result.hotelReviewsScore}
+          hotelStreetAddress={result.hotelStreetAddress}
+          hotelName={result.hotelName}
+          hotelStars={result.hotelStars}
+          hotelAmenities={result.hotelAmenities}
+          hotelReviewsDesc={result.hotelReviewsDesc}
+          totalAmenities={result.totalAmenities}
+          hotelCity={result.hotelCity}
+          hotelNation={result.hotelNation}
+          isFavorite={result.isFavorite}
+        />
+      ))}
+
+      {hasNextPage ? (
+        <Button
+          variant={"default"}
+          size={"lg"}
+          className="w-full bg-black"
+          onClick={() => fetchNextPage()}
+        >
+          {isFetchingNextPage ? "Loading more..." : "Show more results"}
+        </Button>
+      ) : (
+        <p className="text-center text-black mt-4">End of results</p>
+      )}
     </div>
   );
 };

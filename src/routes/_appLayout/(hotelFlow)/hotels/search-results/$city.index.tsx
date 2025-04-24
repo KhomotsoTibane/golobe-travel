@@ -10,6 +10,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Filter } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const hotelSearchSchema = z.object({
   rating: z.string().optional(),
@@ -46,6 +47,7 @@ export const Route = createFileRoute("/_appLayout/(hotelFlow)/hotels/search-resu
 
 function HotelSearchResults() {
   const [isFiltersFullOpen, setIsFiltersFullOpen] = useState(false);
+  const [isFiltersMobileFullOpen, setIsFiltersMobileFullOpen] = useState(false);
   const initialData = Route.useLoaderData();
   const search = Route.useSearch();
   const { city } = Route.useParams();
@@ -93,7 +95,7 @@ function HotelSearchResults() {
         height: `calc(100vh - ${52}px)`,
       }}
     >
-      <div className="flex justify-between items-center w-full py-5 ">
+      <div className="hidden lg:flex justify-end items-center w-full py-5 gap-4 px-4">
         <Button
           variant="outline"
           className={cn(
@@ -109,14 +111,35 @@ function HotelSearchResults() {
         </Button>
         <HotelSearch icon />
       </div>
-      <div className="flex justify-between flex-1 overflow-hidden gap-3 mb-5">
-        <div
+      <div className="flex justify-between items-center w-full py-5 lg:hidden">
+        <Sheet open={isFiltersMobileFullOpen} onOpenChange={setIsFiltersMobileFullOpen}>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "gap-2 rounded-md border-primary-400 hover:bg-primary-500 hover:text-primary-100",
+                isFiltersFullOpen && "bg-primary-700 text-primary-100"
+              )}
+            >
+              <Filter className="w-4 h-4" />
+              <span>All Filters</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-4 w-11/12 max-w-sm overflow-y-auto">
+            <FiltersFull />
+          </SheetContent>
+        </Sheet>
+        <HotelSearch icon />
+      </div>
+
+      <div className="flex flex-col md:flex-row justify-between flex-1 overflow-hidden gap-3 mb-5 h-full rounded-xl">
+        <aside
           className={`h-full overflow-auto transition-all duration-300 ease-in-out ${
             isFiltersFullOpen ? "w-4/12 opacity-100 visible" : "w-0 opacity-0 invisible"
           }`}
         >
           <FiltersFull />
-        </div>
+        </aside>
         <Map
           properties={hotels}
           error={error}
@@ -124,14 +147,15 @@ function HotelSearchResults() {
           isFetching={isFetching}
           entity={entityData}
         />
-        <div className="basis-8/12 overflow-y-auto no-scrollbar" style={{ overflowY: "scroll" }}>
+
+        <main className="lg:basis-8/12 h-screen ">
           <SearchHotelResults
             searchResults={hotels}
             fetchNextPage={fetchNextPage}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
           />
-        </div>
+        </main>
       </div>
     </div>
   );
