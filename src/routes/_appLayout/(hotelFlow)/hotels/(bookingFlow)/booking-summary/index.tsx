@@ -12,6 +12,7 @@ import type { SearchHotelDetailResultsProps } from "@/types";
 import { format as formatTz } from "date-fns-tz";
 import BookingConfirmation from "@/components/Modal/BookingConfirmedModal";
 import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute(
   "/_appLayout/(hotelFlow)/hotels/(bookingFlow)/booking-summary/"
@@ -61,7 +62,7 @@ function RouteComponent() {
 
   const dateTimeCheckin1 = toZuluDateTime(checkin!, hotelCheckinTime!);
   const dateTimeCheckout1 = toZuluDateTime(checkout!, hotelCheckoutTime!);
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "booking-summary-price",
       checkin,
@@ -189,7 +190,13 @@ function RouteComponent() {
               serviceFee={data.serviceFee}
             />
           </div>
-        ) : null}
+        ) : (
+          <div className="col-span-1">
+            <Skeleton className="bg-white">
+              <Skeleton className="card-shadow flex flex-col gap-2 overflow-hidden rounded-2xl lg:h-[450px] lg:min-h-[300px]  lg:gap-6 p-6"></Skeleton>
+            </Skeleton>
+          </div>
+        )}
       </div>
     </section>
   );

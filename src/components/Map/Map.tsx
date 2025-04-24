@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import type { SearchResultsProps } from "@/types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN as string;
 
@@ -45,7 +46,13 @@ const Map = ({ properties, error, isFetching, isFetchingNextPage, status, entity
     return () => map.remove();
   }, [isFetching, error, properties, status]);
 
-  if (isFetching) return <>Loading...</>;
+  if (isFetching)
+    return (
+      <div className="relative rounded-xl w-full h-screen">
+        <Skeleton className="h-4 size-full" />
+      </div>
+    );
+
   if (error || !properties) return <div>Failed to fetch properties</div>;
 
   return (

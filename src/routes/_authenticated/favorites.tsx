@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import type { SearchResultsProps } from "@/types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/favorites")({
   component: RouteComponent,
@@ -22,10 +23,30 @@ function RouteComponent() {
   });
 
   if (error) console.error("Error loading favorites", error);
-  if (isLoading) console.log("Loading favorites...");
-
   if (isLoading) {
-    return <div>Loading your favorites...</div>;
+    return (
+      <div
+        className="max-w-screen-lg mx-auto"
+        // style={{ overflowY: "scroll" }}
+      >
+        <Skeleton defaultValue="hotels" className="w-full">
+          <Skeleton className="h-24 w-full gap-8">
+            <Skeleton className="flex items-center justify-center gap-1" />
+          </Skeleton>
+
+          <Skeleton className="w-full">
+            <Skeleton className="max-w-screen-2xl mx-auto">
+              <Skeleton
+                id="searchResultContainer"
+                className=" flex h-full overflow-auto max-w-screen-md flex-col gap-8 items-center justify-center mx-auto"
+              >
+                <Skeleton className="h-72" />
+              </Skeleton>
+            </Skeleton>
+          </Skeleton>
+        </Skeleton>
+      </div>
+    );
   }
   const numberFavHotels = data.length;
   return (
