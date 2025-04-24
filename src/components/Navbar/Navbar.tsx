@@ -74,7 +74,7 @@ const Navbar = ({ textWhite }: NavProps) => {
             return (
               <div key={item.link} className="relative">
                 <Button asChild variant="link" className="text-black">
-                  <Link to={item.link} className="flex items-center gap-1">
+                  <Link to={item.link} className="flex items-center gap-1 hover:no-underline">
                     <img
                       src={item.imageUrlDark}
                       width={24}
@@ -110,7 +110,10 @@ const Navbar = ({ textWhite }: NavProps) => {
         <div className="hidden md:flex items-center gap-4">
           {data ? (
             <>
-              <Link to="/favorites">
+              <Link
+                to="/favorites"
+                onClick={() => sessionStorage.setItem("returnToAuthRoute", "/favorites")}
+              >
                 <Button variant="ghost">
                   <Heart fill={textWhite ? "#fff" : "#000"} className="w-6 h-6 cursor-pointer" />
                   <small>Favorites</small>
@@ -125,10 +128,14 @@ const Navbar = ({ textWhite }: NavProps) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-white text-primary-700">
                   <DropdownMenuItem>
-                    <Link to="/profile">Manage Profile</Link>
+                    <Link
+                      to="/profile"
+                      onClick={() => sessionStorage.setItem("returnToAuthRoute", "/profile")}
+                    >
+                      Manage Profile
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-primary-200" />
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>Sign out</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -164,7 +171,11 @@ const Navbar = ({ textWhite }: NavProps) => {
                 <Link to="/favorites" className="block mb-2">
                   Favorites
                 </Link>
-                <Link to="/profile" className="block mb-2">
+                <Link
+                  to="/profile"
+                  onClick={() => sessionStorage.setItem("returnToAuthRoute", "/profile")}
+                  className="block mb-2"
+                >
                   Manage Profile
                 </Link>
                 <button onClick={handleLogout} className="text-left w-full text-red-500">

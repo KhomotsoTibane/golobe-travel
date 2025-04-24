@@ -132,7 +132,7 @@ function HotelSearchResults() {
         <HotelSearch icon />
       </div>
 
-      <div className="flex justify-between flex-1 overflow-hidden gap-3 mb-5">
+      <div className="flex flex-col md:flex-row justify-between flex-1 overflow-hidden gap-3 mb-5 h-full rounded-xl">
         <aside
           className={`h-full overflow-auto transition-all duration-300 ease-in-out ${
             isFiltersFullOpen ? "w-4/12 opacity-100 visible" : "w-0 opacity-0 invisible"
@@ -147,7 +147,7 @@ function HotelSearchResults() {
           isFetching={isFetching}
           entity={entityData}
         />
-        {/* <div className="hidden lg:flex basis-12/12 grow relative rounded-xl border h-full bg-primary-400"></div> */}
+
         <main className="lg:basis-8/12 h-screen ">
           <SearchHotelResults
             searchResults={hotels}

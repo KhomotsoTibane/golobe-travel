@@ -45,7 +45,7 @@ function RouteComponent() {
 
   console.log("checkin`1", checkin, "\ncheckout1", checkout);
   function toZuluDateTime(date: Date, time: string, timeZone = "Africa/Johannesburg") {
-    // ⛳️ Split the time string — not the date!
+    // Split the time string — not the date!
     const [hours, minutes] = time.split(":").map(Number);
 
     // Copy date and apply time

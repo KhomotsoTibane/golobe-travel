@@ -27,6 +27,7 @@ function RouteComponent() {
   if (isLoading) {
     return <div>Loading your favorites...</div>;
   }
+  const numberFavHotels = data.length;
   return (
     <div
       className="max-w-screen-lg mx-auto"
@@ -34,11 +35,17 @@ function RouteComponent() {
     >
       <Tabs defaultValue="hotels" className="w-full">
         <TabsList className="h-24 w-full gap-8  card-shadow">
-          <TabsTrigger value="flights" className="flex items-center justify-center gap-1">
-            Flights
+          <TabsTrigger disabled value="flights" className="flex items-center justify-center gap-1">
+            <div className="flex flex-col">
+              <span>Flights</span>
+              <small className="text-muted-foreground">0 marked</small>
+            </div>
           </TabsTrigger>
           <TabsTrigger value="hotels" className="flex items-center justify-center gap-1">
-            Hotels
+            <div className="flex flex-col">
+              <span>Hotels</span>
+              <small className="text-muted-foreground">{`${numberFavHotels ?? 0}`} marked</small>
+            </div>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="flights" className="h-screen">
@@ -50,7 +57,7 @@ function RouteComponent() {
           <div className="max-w-screen-2xl mx-auto">
             <div
               id="searchResultContainer"
-              className=" flex h-full max-w-screen-md flex-col gap-8 items-center justify-center mx-auto"
+              className=" flex h-full overflow-auto max-w-screen-md flex-col gap-8 items-center justify-center mx-auto"
             >
               {data.map((result: SearchResultsProps) => (
                 <SearchHotelResultsCard

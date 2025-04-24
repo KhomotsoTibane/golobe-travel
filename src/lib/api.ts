@@ -227,4 +227,17 @@ export const client = {
       }),
     });
   },
+  async getUserBookings(params: userFavoriteParams) {
+    const { id } = params;
+    const session = await fetchAuthSession();
+    const { idToken } = session.tokens ?? {};
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/hotel-booking/user/${id}`, {
+      headers: { Authorization: `Bearer ${idToken}`, "Content-Type": "application/json" },
+    });
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+    const json = await res.json();
+    return json;
+  },
 };

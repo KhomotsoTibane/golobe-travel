@@ -38,7 +38,9 @@ const SearchHotelResultsCard = ({
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-favorites", data?.cognitoInfo.userId!] });
+      queryClient.invalidateQueries({
+        queryKey: ["toggle-user-favorites", data?.cognitoInfo.userId!],
+      });
 
       queryClient.refetchQueries({
         queryKey: ["hotel-results"],

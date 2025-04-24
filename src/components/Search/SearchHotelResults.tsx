@@ -19,7 +19,7 @@ const SearchHotelResults = ({
   return (
     <div
       id="searchResultContainer"
-      className="  max-h-[calc(100vh-150px)] sm:max-h-[calc(100vh-200px)] overflow-y-auto px-4 flex flex-col gap-8"
+      className="h-[60dvh] md:h-[80dvh] overflow-y-auto px-4 flex flex-col gap-8"
     >
       {searchResults.map((result) => (
         <SearchHotelResultsCard
