@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { format as formatTz, toZonedTime } from "date-fns-tz";
+import { tz, TZDate } from "@date-fns/tz";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -12,30 +12,52 @@ export const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat(locale, { style: "currency", currency }).format(amount);
 };
 
-export const toZuluDateTime = (date: Date, time: string, timeZone = "Africa/Johannesburg") => {
-  // Split the time string — not the date!
+export const toHotelDateAndTime = (
+  date: Date | string,
+  time: string,
+  timeZone = "Africa/Johannesburg"
+) => {
+  const parsedDate = new Date(date);
+
+  if (isNaN(parsedDate.getTime())) {
+    throw new Error("Invalid date input");
+  }
   const [hours, minutes] = time.split(":").map(Number);
 
-  // Copy date and apply time
-  const combined = new Date(date);
-  combined.setHours(hours);
-  combined.setMinutes(minutes);
-  combined.setSeconds(0);
-  combined.setMilliseconds(0);
-
-  // Format with timezone offset
-  return formatTz(combined, "yyyy-MM-dd'T'HH:mm:ssXXX", { timeZone });
+  const tzDate = new TZDate(
+    parsedDate.getFullYear(),
+    parsedDate.getMonth(),
+    parsedDate.getDate(),
+    timeZone
+  );
+  tzDate.setHours(hours);
+  tzDate.setMinutes(minutes);
+  return tzDate;
 };
 
-export function fromIsoToOffsetParts(
-  isoString: string,
-  timeZone = "Africa/Johannesburg"
-): { localDate: string; localTime: string } {
+export function fromIsoToOffsetParts(isoString: string): { localDate: string; localTime: string } {
   const date = new Date(isoString);
-  const zoned = toZonedTime(date, timeZone);
+
+  // Manually adjust to Johannesburg time (UTC+2)
+  const saTime = new Date(date.getTime() + 2 * 60 * 60 * 1000);
+
+  // Format date parts manually
+  const localDate = saTime.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC", // Treat shifted date as UTC
+  });
+
+  const localTime = saTime.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "UTC",
+  });
 
   return {
-    localDate: formatTz(zoned, "eee-MMM-d", { timeZone }),
-    localTime: formatTz(zoned, "HH:mm", { timeZone }), // With +02:00
+    localDate,
+    localTime,
   };
 }

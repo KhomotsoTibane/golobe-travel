@@ -51,8 +51,8 @@ export type bookingPriceProps = {
 export type confirmBookingPriceParams = {
   userId: string;
   hotelId: string;
-  checkin: string;
-  checkout: string;
+  checkin: Date;
+  checkout: Date;
   children: string;
   adults: string;
   basePrice: number;

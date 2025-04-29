@@ -5,11 +5,10 @@ import PriceSummaryCard from "@/components/Cards/PriceSummaryCard";
 import { buildingDark, locationDark } from "@/assets/icons";
 import { useHotelStore } from "@/store/useHotelDetailsStore";
 import { useFilterStore } from "@/store/useFilterStore";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, toHotelDateAndTime } from "@/lib/utils";
 import { format } from "date-fns";
 import { LoginSignupCard } from "@/components/Cards/LoginSignupCard";
 import type { SearchHotelDetailResultsProps } from "@/types";
-import { format as formatTz } from "date-fns-tz";
 import BookingConfirmation from "@/components/Modal/BookingConfirmedModal";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,10 +22,8 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { selectedHotel } = useHotelStore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const timeZone = "Africa/Johannesburg";
   const { checkin, checkout, rooms, adults, children } = useFilterStore();
   const { data: auth } = useQuery(userQueryOptions);
-
   const cognitoId = auth?.userDetails.cognitoId!;
 
   const {
@@ -44,24 +41,14 @@ function RouteComponent() {
     hotelId,
   } = selectedHotel as SearchHotelDetailResultsProps;
 
-  console.log("checkin`1", checkin, "\ncheckout1", checkout);
-  function toZuluDateTime(date: Date, time: string, timeZone = "Africa/Johannesburg") {
-    // Split the time string — not the date!
-    const [hours, minutes] = time.split(":").map(Number);
-
-    // Copy date and apply time
-    const combined = new Date(date);
-    combined.setHours(hours);
-    combined.setMinutes(minutes);
-    combined.setSeconds(0);
-    combined.setMilliseconds(0);
-
-    // Format with timezone offset
-    return formatTz(combined, "yyyy-MM-dd'T'HH:mm:ssXXX", { timeZone });
+  let dateTimeCheckin;
+  let dateTimeCheckout;
+  if (checkin && checkout) {
+    console.log("running", checkin, checkout);
+    dateTimeCheckin = toHotelDateAndTime(checkin!, hotelCheckinTime!);
+    dateTimeCheckout = toHotelDateAndTime(checkout!, hotelCheckoutTime!);
   }
 
-  const dateTimeCheckin1 = toZuluDateTime(checkin!, hotelCheckinTime!);
-  const dateTimeCheckout1 = toZuluDateTime(checkout!, hotelCheckoutTime!);
   const { data, isLoading } = useQuery({
     queryKey: [
       "booking-summary-price",
@@ -74,8 +61,8 @@ function RouteComponent() {
     ],
     queryFn: async () =>
       client.getBookingTotalPrice({
-        checkin: new Date(dateTimeCheckin1),
-        checkout: new Date(dateTimeCheckout1),
+        checkin: dateTimeCheckin!,
+        checkout: dateTimeCheckout!,
         children: children!.toString(),
         adults: adults!.toString(),
         basePrice: hotelLowestPrice,
@@ -85,10 +72,6 @@ function RouteComponent() {
       }),
   });
 
-  console.log("checkin2", checkin, "\ncheckout2", checkout);
-
-  const dateTimeCheckin = toZuluDateTime(checkin!, hotelCheckinTime!);
-  const dateTimeCheckout = toZuluDateTime(checkout!, hotelCheckoutTime!);
   const {
     mutate: confirmBooking,
     isPending,
@@ -99,8 +82,8 @@ function RouteComponent() {
       client.confirmBooking({
         userId: cognitoId,
         hotelId: hotelId,
-        checkin: dateTimeCheckin,
-        checkout: dateTimeCheckout,
+        checkin: dateTimeCheckin!,
+        checkout: dateTimeCheckout!,
         children: children!.toString(),
         adults: adults!.toString(),
         basePrice: hotelLowestPrice,
@@ -111,9 +94,12 @@ function RouteComponent() {
         checkoutTime: hotelCheckoutTime!,
       }),
     onSuccess: (response) => {
-      setIsOpen(true);
-
-      console.log("confirmed!", response);
+      if (response.status !== 201) {
+        setIsOpen(true);
+        console.log("confirmed!", response);
+      } else {
+        throw new Error();
+      }
     },
     onError: (error) => {
       console.error("failed", error);
@@ -153,8 +139,7 @@ function RouteComponent() {
             </div>
             <div className="flex justify-between">
               <div className="flex justify-center items-center">
-                <CheckingCard date={checkin!} action={"check-in"} />
-                {hotelCheckinTime}
+                <CheckingCard date={checkin!} action={"check-in"} time={hotelCheckinTime} />
               </div>
               <img
                 src={buildingDark}
@@ -164,8 +149,7 @@ function RouteComponent() {
                 className=" rounded-lg"
               />
               <div className="flex justify-center items-center">
-                <CheckingCard date={checkout!} action={"check-out"} />
-                {hotelCheckoutTime}
+                <CheckingCard date={checkout!} action={"check-out"} time={hotelCheckoutTime} />
               </div>
             </div>
           </div>
@@ -204,14 +188,17 @@ function RouteComponent() {
 
 interface CheckingCardProps {
   date: Date;
+  time?: string;
   action: string;
 }
 
-export const CheckingCard = ({ date, action }: CheckingCardProps) => {
+export const CheckingCard = ({ date, action, time }: CheckingCardProps) => {
   return (
     <div className="p-4">
       <p className="font-semibold">{format(date, "EEEE, MMMM d")}</p>
-      <p className=" capitalize text-muted-foreground">{action}</p>
+      <p className=" capitalize text-muted-foreground">
+        {action}: {time}
+      </p>
     </div>
   );
 };

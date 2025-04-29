@@ -264,7 +264,7 @@ function HotelDetails() {
                   <img
                     src={img.dynamic}
                     alt={`Photo ${i}`}
-                    className="h-full w-full object-cover max-h-[600px]"
+                    className="h-full w-full object-cover max-h-[300px]"
                   />
 
                   {/* View All Button on the bottom-right image */}

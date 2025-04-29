@@ -4,7 +4,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useFilterStore } from "@/store/useFilterStore";
 
 const BookingConfirmation = ({
@@ -24,8 +24,7 @@ const BookingConfirmation = ({
 
   const handleBookingsClick = () => {
     () => setIsOpen(false);
-    // resetFilters();
-    navigate({ to: `/profile` });
+    sessionStorage.setItem("returnToAuthRoute", "/profile");
   };
 
   return (
@@ -57,22 +56,26 @@ const BookingConfirmation = ({
               <p className="text-center mb-6">Your stay has been successfully booked.</p>
               <div className="flex gap-2  justify-evenly">
                 <Button
-                  onClick={handleBookingsClick}
                   size={"lg"}
                   className={cn(
                     "bg-primary-400 transition-opacity text-indigo-600 font-semibold  py-2 rounded"
                   )}
+                  asChild
                 >
-                  View Bookings
+                  <Link to={`/profile`} onClick={handleBookingsClick}>
+                    View Bookings
+                  </Link>
                 </Button>
+
                 <Button
-                  onClick={handleHomeClick}
                   size={"lg"}
                   className={cn(
                     "bg-black hover:opacity-90 hover:bg-black transition-colors text-white font-semibold  py-2 rounded"
                   )}
                 >
-                  Go Home
+                  <Link to={`/`} onClick={handleHomeClick}>
+                    Go Home
+                  </Link>
                 </Button>
               </div>
             </div>
